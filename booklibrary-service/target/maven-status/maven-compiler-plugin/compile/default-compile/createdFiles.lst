@@ -1,0 +1,15 @@
+com\laba\booklibrary\service\users\UserService.class
+com\laba\booklibrary\service\users\UserRoleDao.class
+com\laba\booklibrary\service\books\BookDaoImpl.class
+com\laba\booklibrary\service\connection\ConnectionPoolException.class
+com\laba\booklibrary\service\books\BookServiceImpl.class
+com\laba\booklibrary\service\connection\ConnectionPool$PooledConnection.class
+com\laba\booklibrary\service\books\BookService.class
+com\laba\booklibrary\service\books\BookDao.class
+com\laba\booklibrary\service\users\UserRoleDaoImpl.class
+com\laba\booklibrary\service\users\UserDao.class
+com\laba\booklibrary\service\users\UserTO.class
+com\laba\booklibrary\service\users\UserServiceImpl.class
+com\laba\booklibrary\service\books\BookTO.class
+com\laba\booklibrary\service\connection\ConnectionPool.class
+com\laba\booklibrary\service\users\UserDaoImpl.class

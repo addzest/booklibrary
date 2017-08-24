@@ -1,0 +1,7 @@
+com\laba\booklibrary\web\listener\LibraryServletContextListener.class
+com\laba\booklibrary\web\users\LogoutServlet.class
+com\laba\booklibrary\web\users\LoginServlet.class
+com\laba\booklibrary\web\tags\ListLengthTagHandler.class
+com\laba\booklibrary\web\book\BookControllerServlet.class
+com\laba\booklibrary\web\filters\FormEncodingSetterFilter.class
+com\laba\booklibrary\web\users\RegistrationServlet.class
