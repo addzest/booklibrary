@@ -59,18 +59,25 @@ class UserDaoImpl implements UserDao {
     public boolean validateUser(String username, String password) {
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         boolean isValidated = false;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             String findQuery = "SELECT * FROM users WHERE user_name = '" + username + "' AND user_password = '" + password + "'";
-            ResultSet resultSet = statement.executeQuery(findQuery);
+            resultSet = statement.executeQuery(findQuery);
             if (resultSet.next()) {
                 isValidated = true;
             }
         } catch(Exception e) {
             log.error("Validate user exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -98,17 +105,24 @@ class UserDaoImpl implements UserDao {
         boolean isExist = false;
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             String findQuery = "SELECT * FROM users WHERE user_name = '" + username + "'";
-            ResultSet resultSet = statement.executeQuery(findQuery);
+            resultSet = statement.executeQuery(findQuery);
             if (resultSet.next()) {
                 isExist = true;
             }
         } catch(Exception e) {
             log.error("Check username exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -136,18 +150,25 @@ class UserDaoImpl implements UserDao {
     public long getUserId(String username) {
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         long userId = 0;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             String findRoleQuery = "SELECT id FROM users WHERE user_name = '" + username + "'";
-            ResultSet resultSet = statement.executeQuery(findRoleQuery);
+            resultSet = statement.executeQuery(findRoleQuery);
             if (resultSet.next()) {
                 userId = resultSet.getLong("id");
             }
         } catch(Exception e) {
             log.error("Get user id exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();

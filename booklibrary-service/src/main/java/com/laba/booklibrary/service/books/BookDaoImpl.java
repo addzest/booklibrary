@@ -129,11 +129,12 @@ class BookDaoImpl implements BookDao {
         BookTO bookTO = new BookTO();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             String getByIdQuery = "SELECT title, author, publish_year, count, description FROM books WHERE id='"+id+"'";
             statement = connection.createStatement();
-            ResultSet resultSet =statement.executeQuery(getByIdQuery);
+            resultSet =statement.executeQuery(getByIdQuery);
             while (resultSet.next()) {
                 bookTO.setId(id);
                 bookTO.setTitle(resultSet.getString("title"));
@@ -145,6 +146,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("Get book by id exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -171,12 +178,13 @@ class BookDaoImpl implements BookDao {
         List<BookTO> foundBooks = new ArrayList<BookTO>();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             searchRequest = "%" + searchRequest + "%";
             String getByIdQuery = "SELECT id, title, author, publish_year, count, description FROM books WHERE lower(CONCAT(title,' ',author,' ',publish_year,' ',count,' ', description)) LIKE lower('"+searchRequest+"')";
             statement = connection.createStatement();
-            ResultSet resultSet =statement.executeQuery(getByIdQuery);
+            resultSet =statement.executeQuery(getByIdQuery);
             while (resultSet.next()) {
                 BookTO bookTO = new BookTO();
                 bookTO.setId(resultSet.getLong("id"));
@@ -190,6 +198,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("Find book exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -216,11 +230,12 @@ class BookDaoImpl implements BookDao {
         List<BookTO> bookTOList= new ArrayList<BookTO>();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            String getBookTOListQuery = "SELECT id, title, author, publish_year, count, description FROM books ";
+            String getBookTOListQuery = "SELECT id, title, author, publish_year, count, description FROM books ORDER BY publish_year LIMIT 5";
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(getBookTOListQuery);
+            resultSet = statement.executeQuery(getBookTOListQuery);
             while (resultSet.next()) {
                 BookTO bookTO = new BookTO();
                 bookTO.setId(resultSet.getLong("id"));
@@ -234,6 +249,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("Get book list exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -364,12 +385,13 @@ class BookDaoImpl implements BookDao {
     public boolean bookOnHold(long id) {
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         boolean bookOnHold = true;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             String checkBookOnHoldQuery = "SELECT book_id FROM books_onhold WHERE book_id = " + id;
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(checkBookOnHoldQuery);
+            resultSet = statement.executeQuery(checkBookOnHoldQuery);
             if (resultSet.next()) {
                 bookOnHold = true;
             } else {
@@ -378,6 +400,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("Approve book exception",e);;
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -404,12 +432,13 @@ class BookDaoImpl implements BookDao {
         List<BookTO> booksOnHoldList= new ArrayList<BookTO>();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             String getBooksOnHoldListQuery = "SELECT books.id, books.title, books.author, books.publish_year, books.description, books_onhold.operation_id, books_onhold.hold_type, books_onhold.approved " +
                     "FROM books INNER JOIN books_onhold ON books.id=books_onhold.book_id WHERE books_onhold.user_id = '" + userId +"'";
             statement = connection.createStatement();
-            ResultSet resultSet =statement.executeQuery(getBooksOnHoldListQuery);
+            resultSet =statement.executeQuery(getBooksOnHoldListQuery);
             while (resultSet.next()) {
                 BookTO bookTO = new BookTO();
                 bookTO.setId(resultSet.getLong("id"));
@@ -425,6 +454,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("Books on hold list exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
@@ -451,12 +486,13 @@ class BookDaoImpl implements BookDao {
         List<BookTO> booksOnHoldList= new ArrayList<BookTO>();
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
             String getAllBooksOnHoldListQuery = "SELECT books.id, books.title, books.author, books.publish_year, books.description, books_onhold.operation_id, books_onhold.user_id, books_onhold.hold_type, books_onhold.approved " +
                     "FROM books INNER JOIN books_onhold ON books.id=books_onhold.book_id";
             statement = connection.createStatement();
-            ResultSet resultSet =statement.executeQuery(getAllBooksOnHoldListQuery);
+            resultSet =statement.executeQuery(getAllBooksOnHoldListQuery);
             while (resultSet.next()) {
                 BookTO bookTO = new BookTO();
                 bookTO.setId(resultSet.getLong("id"));
@@ -473,6 +509,12 @@ class BookDaoImpl implements BookDao {
         } catch(Exception e) {
             log.error("All books on hold list exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();

@@ -21,18 +21,25 @@ public class UserRoleDaoImpl implements UserRoleDao{
     public String getUserRole(long id) {
         Connection connection = null;
         Statement statement = null;
+        ResultSet resultSet = null;
         String role = "reader";
         try {
             connection = ConnectionPool.getInstance().getConnection();
             statement = connection.createStatement();
             String findRoleQuery = "SELECT role_name FROM user_roles WHERE id = (SELECT role_id FROM user_role_mapping WHERE user_id = '" + id + "')";
-            ResultSet resultSet = statement.executeQuery(findRoleQuery);
+            resultSet = statement.executeQuery(findRoleQuery);
             if (resultSet.next()) {
                 role = resultSet.getString("role_name");
             }
         } catch(Exception e) {
             log.error("Get user role exception",e);
         } finally {
+            try {
+                if (resultSet!= null)
+                    resultSet.close();
+            } catch (SQLException e) {
+                log.error("Closing resultSet exception", e);
+            }
             try {
                 if(statement!=null)
                     statement.close();
