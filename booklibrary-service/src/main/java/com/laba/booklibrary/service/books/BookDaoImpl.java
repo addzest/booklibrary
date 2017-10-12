@@ -233,7 +233,7 @@ class BookDaoImpl implements BookDao {
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            String getBookTOListQuery = "SELECT id, title, author, publish_year, count, description FROM books ORDER BY publish_year LIMIT 5";
+            String getBookTOListQuery = "SELECT id, title, author, publish_year, count, description FROM books ";
             statement = connection.createStatement();
             resultSet = statement.executeQuery(getBookTOListQuery);
             while (resultSet.next()) {

@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 public class UserServiceImpl implements UserService{
     private static final Logger log = Logger.getLogger(UserServiceImpl.class);
     private UserDao userDao = new UserDaoImpl();
-    private UserRoleDao userRoleDao = new UserRoleDaoImpl();
+
 
     /**
      * Method to check if username is already exist
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void addUser(UserTO userTO) {
         this.userDao.addUser(userTO);
-        this.userRoleDao.setUserRole(userDao.getUserId(userTO.getUsername()));
+        this.userDao.setUserRole(userDao.getUserId(userTO.getUsername()));
         log.info("New user added "+ userTO);
     }
 
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public String getUserRole(long id) {
-        return this.userRoleDao.getUserRole(id);
+        return this.userDao.getUserRole(id);
     }
 
     /**
