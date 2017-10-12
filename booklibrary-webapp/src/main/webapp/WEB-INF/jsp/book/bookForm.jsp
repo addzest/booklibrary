@@ -32,19 +32,19 @@
                         <fieldset>
                             <input id ="id" type="hidden" name="id" value="${bookTO.id}">
                             <div class="form-group">
-                                <input class="form-control" id="title" placeholder="<fmt:message key="bookform.title"/>" name="title" type="text" value="${bookTO.title}">
+                                <input class="form-control" id="title" placeholder="<fmt:message key="bookform.title"/>" name="title" type="text" value="${bookTO.title}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="author" placeholder="<fmt:message key="bookform.author"/>" name="author" type="text" value="${bookTO.author}">
+                                <input class="form-control" id="author" placeholder="<fmt:message key="bookform.author"/>" name="author" type="text" value="${bookTO.author}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="publishyear" placeholder="<fmt:message key="bookform.publishyear"/>" name="publishyear" type="number" min="1000" max="2099" step="1" value="${bookTO.publishYear}">
+                                <input class="form-control" id="publishyear" placeholder="<fmt:message key="bookform.publishyear"/>" name="publishyear" type="number" min="1000" max="2099" step="1" value="${bookTO.publishYear}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>" name="count" type="number" min="0" max="100" step="1" value="${bookTO.count}">
+                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>" name="count" type="number" min="0" max="100" step="1" value="${bookTO.count}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="description" placeholder="<fmt:message key="bookform.description"/>" name="description" type="text" value="${bookTO.description}">
+                                <input class="form-control" id="description" placeholder="<fmt:message key="bookform.description"/>" name="description" type="text" value="${bookTO.description}" required>
                             </div>
                             <fmt:message key="bookform.button.submit" var="buttonValue"/>
                             <input type="submit" class="btn btn-lg btn-success btn-block" value="${buttonValue}"/>
