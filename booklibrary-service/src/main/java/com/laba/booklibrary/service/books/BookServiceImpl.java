@@ -14,7 +14,7 @@ public class BookServiceImpl implements BookService {
 
     /**
      * Method for adding book
-     * @param bookTO
+     * @param bookTO - book object
      */
     @Override
     public void addBook(BookTO bookTO) {
@@ -23,9 +23,8 @@ public class BookServiceImpl implements BookService {
     }
 
     /**
-     * Method for removing book. When count>0, decrease count by 1.
-     * Whem count  = 0, checking if book is in onhold list, preventing from deleting
-     * if book is not in onhold list,delete it.
+     * Method for removing book.
+     * If book is in onhold list, preventing from deleting.
      * @param id - book id
      */
     @Override

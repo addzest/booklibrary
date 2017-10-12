@@ -213,5 +213,13 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="/js/sb-admin-2.js"></script>
+
+<c:if test="${requestScope.deleteError eq 'deleteError'}">
+<script>
+    $(document).ready(function(){
+    alert('<fmt:message key="index.alert.onHold"/>');
+    });
+</script>
+</c:if>
 </body>
 </html>

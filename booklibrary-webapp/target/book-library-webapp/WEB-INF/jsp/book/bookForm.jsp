@@ -41,7 +41,7 @@
                                 <input class="form-control" id="publishyear" placeholder="<fmt:message key="bookform.publishyear"/>" name="publishyear" type="number" min="1000" max="2099" step="1" value="${bookTO.publishYear}">
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>" name="count" type="number" min="1" max="100" step="1" value="${bookTO.count}">
+                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>" name="count" type="number" min="0" max="100" step="1" value="${bookTO.count}">
                             </div>
                             <div class="form-group">
                                 <input class="form-control" id="description" placeholder="<fmt:message key="bookform.description"/>" name="description" type="text" value="${bookTO.description}">

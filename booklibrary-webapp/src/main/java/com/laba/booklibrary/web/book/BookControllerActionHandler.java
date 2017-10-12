@@ -18,11 +18,11 @@ import java.util.List;
  * Action handler - to work with operations on books
  */
 
-public class BookControllerActionHandler {
+class BookControllerActionHandler {
 
     private BookService bookService = new BookServiceImpl();
 
-    public void execute(String action, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
+    void execute(String action, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         switch (action) {
             case "listBooks": {
                 listBooks(request, response, session);
@@ -54,6 +54,10 @@ public class BookControllerActionHandler {
             }
             case "saveBook": {
                 saveBook(request, response, session);
+                break;
+            }
+            default: {
+                listBooks(request, response, session);
                 break;
             }
         }
@@ -99,7 +103,7 @@ public class BookControllerActionHandler {
     }
 
     private void approveBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
+        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("operationId"))) {
             Long operationId = Long.parseLong(request.getParameter("operationId"));
             bookService.approveBook(operationId);
             if (StringUtils.isNotEmpty(request.getParameter("page"))) {
@@ -158,8 +162,12 @@ public class BookControllerActionHandler {
             if (!StringUtils.isEmpty(id) && NumberUtils.isCreatable(id)) {
                 Long bookId = Long.parseLong(id);
                 BookTO bookTO = bookService.getBookById(bookId);
-                request.setAttribute("bookTO", bookTO);
-                request.getRequestDispatcher("WEB-INF/jsp/book/bookForm.jsp").forward(request, response);
+                if (bookTO.getTitle()!= null) {
+                    request.setAttribute("bookTO", bookTO);
+                    request.getRequestDispatcher("WEB-INF/jsp/book/bookForm.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect("index?action=listBooks");
+                }
             } else {
                 response.sendRedirect("index?action=listBooks");
             }
@@ -169,15 +177,21 @@ public class BookControllerActionHandler {
     }
 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
-            if (!bookService.removeBook(Integer.parseInt(request.getParameter("id")))) {
-                request.setAttribute("deleteError", "deleteError");
+        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("id"))) {
+            long id = Integer.parseInt(request.getParameter("id"));
+            if (bookService.getBookById(id).getTitle() != null){
+                if (!bookService.removeBook(id)) {
+                    request.setAttribute("deleteError", "deleteError");
+                }
+                if (StringUtils.isNotEmpty(request.getParameter("page"))) {
+                    int page = Integer.parseInt(request.getParameter("page"));
+                    request.getRequestDispatcher("index?action=listBooks&page=" + page).forward(request,response);
+                } else {
+                    request.getRequestDispatcher("index?action=listBooks").forward(request,response);
+                }
             }
-            if (StringUtils.isNotEmpty(request.getParameter("page"))) {
-                int page = Integer.parseInt(request.getParameter("page"));
-                request.getRequestDispatcher("index?action=listBooks&page=" + page).forward(request,response);
-            } else {
-                request.getRequestDispatcher("index?action=listBooks").forward(request,response);
+            else {
+                response.sendRedirect("index?action=listBooks");
             }
         } else {
             response.sendRedirect("index?action=listBooks");

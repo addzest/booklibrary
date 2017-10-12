@@ -40,6 +40,11 @@
         <url-pattern>/index</url-pattern>
     </servlet-mapping>
 
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/jsp/errorpage.jsp</location>
+    </error-page>
+
     <filter>
         <filter-name>FormEncodingSetterFilter</filter-name>
         <filter-class>com.laba.booklibrary.web.filters.FormEncodingSetterFilter</filter-class>
