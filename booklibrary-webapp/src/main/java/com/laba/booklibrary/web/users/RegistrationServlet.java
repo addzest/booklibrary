@@ -2,7 +2,7 @@ package com.laba.booklibrary.web.users;
 
 import com.laba.booklibrary.service.users.UserService;
 import com.laba.booklibrary.service.users.UserServiceImpl;
-import com.laba.booklibrary.service.users.UserTO;
+import com.laba.booklibrary.service.users.model.UserTO;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.ServletException;

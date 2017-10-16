@@ -1,5 +1,7 @@
 package com.laba.booklibrary.service.users;
 
+import com.laba.booklibrary.service.users.model.UserTO;
+
 /**
  * Created by Trofim on 18.07.2017.
  */

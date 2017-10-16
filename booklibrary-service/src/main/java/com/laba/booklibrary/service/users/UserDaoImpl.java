@@ -1,7 +1,11 @@
 package com.laba.booklibrary.service.users;
 
 import com.laba.booklibrary.service.connection.ConnectionPool;
+import com.laba.booklibrary.service.users.model.UserTO;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import java.sql.*;
 
@@ -57,6 +61,18 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean validateUser(String username, String password) {
+/*
+        long id = 1;
+        boolean isValidated = false;
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        if (session.get(UserTO.class, id)!= null){
+            isValidated=true;
+        }
+
+        return isValidated;
+*/
         Connection connection = null;
         Statement statement = null;
         ResultSet resultSet = null;

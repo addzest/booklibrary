@@ -1,6 +1,8 @@
 package com.laba.booklibrary.service.users;
 
 
+import com.laba.booklibrary.service.users.model.UserTO;
+
 interface UserDao {
 
 
