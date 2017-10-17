@@ -10,27 +10,34 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 public class UserTO {
-    @Id
+
     private Long id;
-    @Column(name = "user_name")
+
     private String username;
-    @Column(name = "user_password")
+
     private String password;
-    @Column(name = "first_name")
+
     private String firstName;
-    @Column(name = "last_name")
+
     private String lastName;
-    @Column(name = "email")
+
     private String email;
 
-    @OneToMany(mappedBy = "userTO")
-    private Set<UserRoleMappingTO> userRoleMappingTOs;
+    private Set<UserRoleTO> userRoleTOs = new HashSet<UserRoleTO>();
 
-    @ManyToMany
-    @JoinTable(name = "user_roles_mapping",
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role_mapping",
             joinColumns =  { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn( name = "role_id") })
-    private Set<UserRoleTO> userRoleTOs = new HashSet<UserRoleTO>();
+    public Set<UserRoleTO> getUserRoleTOs(){
+        return userRoleTOs;
+    }
+
+    public void setUserRoleTOs(Set<UserRoleTO> userRoleTOs) {
+        this.userRoleTOs = userRoleTOs;
+    }
+
 
     public UserTO() {
     }
@@ -42,6 +49,9 @@ public class UserTO {
                 '}';
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -50,6 +60,7 @@ public class UserTO {
         this.id = id;
     }
 
+    @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
@@ -58,6 +69,7 @@ public class UserTO {
         this.firstName = firstName;
     }
 
+    @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
@@ -66,6 +78,7 @@ public class UserTO {
         this.lastName = lastName;
     }
 
+    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -74,6 +87,7 @@ public class UserTO {
         this.email = email;
     }
 
+    @Column(name = "user_password")
     public String getPassword() {
         return password;
     }
@@ -82,6 +96,7 @@ public class UserTO {
         this.password = password;
     }
 
+    @Column(name = "user_name")
     public String getUsername() {
         return username;
     }

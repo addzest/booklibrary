@@ -15,9 +15,4 @@ interface UserDao {
     long getUserId(String username);
 
     String getUserRole(long id);
-
-    void setUserRole(long id);
-
-
-
 }

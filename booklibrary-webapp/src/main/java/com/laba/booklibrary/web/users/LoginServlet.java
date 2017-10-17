@@ -32,12 +32,12 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     public void doPost (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
         HttpSession session = request.getSession(true);
         if (session!=null && StringUtils.isNotEmpty((CharSequence) session.getAttribute("hasRole"))){
             response.sendRedirect("/index?action=listBooks");
         } else {
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
             if (userService.validateUser(username, password)) {
                 String roleName = userService.getUserRole(userService.getUserId(username));
                 session.setAttribute("name", username);

@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public void addUser(UserTO userTO) {
         this.userDao.addUser(userTO);
-        this.userDao.setUserRole(userDao.getUserId(userTO.getUsername()));
+       // this.userDao.setUserRole(userDao.getUserId(userTO.getUsername()));
         log.info("New user added "+ userTO);
     }
 

@@ -1,19 +1,21 @@
 package com.laba.booklibrary.service.users;
 
-import com.laba.booklibrary.service.connection.ConnectionPool;
+import com.laba.booklibrary.service.connection.HibernateUtil;
+import com.laba.booklibrary.service.users.model.UserRoleTO;
 import com.laba.booklibrary.service.users.model.UserTO;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import java.sql.*;
+
+import javax.persistence.Query;
+
 
 /**
  * DAO access layer for users table
  */
 class UserDaoImpl implements UserDao {
     private static final Logger log = Logger.getLogger(UserDaoImpl.class);
+    private static final long DEFAULT_ROLE_ID = 2;// 2- reader
 
     /**
      * Method to add user to users table
@@ -22,34 +24,13 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public void addUser(UserTO userTO) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            String addQuery = "INSERT INTO users (user_name, user_password, first_name, last_name, email) VALUES(?,?,?,?,?)";
-            preparedStatement = connection.prepareStatement(addQuery);
-            preparedStatement.setString(1,userTO.getUsername());
-            preparedStatement.setString(2,userTO.getPassword());
-            preparedStatement.setString(3,userTO.getFirstName());
-            preparedStatement.setString(4,userTO.getLastName());
-            preparedStatement.setString(5,userTO.getEmail());
-            preparedStatement.execute();
-        } catch(Exception e) {
-            log.error("Add user exception",e);
-        } finally {
-            try {
-                if(preparedStatement!=null)
-                    preparedStatement.close();
-            } catch (SQLException e) {
-                log.error("Closing prepared statement exception",e);
-            }
-            try {
-                if(connection!=null)
-                    connection.close();
-            } catch(SQLException e){
-                log.error("Closing connection exception",e);
-            }
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        UserRoleTO userRoleTO = session.get(UserRoleTO.class, DEFAULT_ROLE_ID);
+        userRoleTO.getUserTOs().add(userTO);
+        session.save(userRoleTO);
+        session.getTransaction().commit();
+        HibernateUtil.closeSession();
     }
 
     /**
@@ -61,51 +42,16 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public boolean validateUser(String username, String password) {
-/*
-        long id = 1;
         boolean isValidated = false;
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
-        Session session = sessionFactory.openSession();
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        if (session.get(UserTO.class, id)!= null){
+        Query query = session.createQuery("from UserTO where username = :username and password = :password");
+        query.setParameter("username",  username);
+        query.setParameter("password", password);
+        if (!query.getResultList().isEmpty()) {
             isValidated=true;
         }
-
-        return isValidated;
-*/
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        boolean isValidated = false;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.createStatement();
-            String findQuery = "SELECT * FROM users WHERE user_name = '" + username + "' AND user_password = '" + password + "'";
-            resultSet = statement.executeQuery(findQuery);
-            if (resultSet.next()) {
-                isValidated = true;
-            }
-        } catch(Exception e) {
-            log.error("Validate user exception",e);
-        } finally {
-            try {
-                if (resultSet!= null)
-                    resultSet.close();
-            } catch (SQLException e) {
-                log.error("Closing resultSet exception", e);
-            }
-            try {
-                if(statement!=null)
-                    statement.close();
-            } catch (SQLException e) {
-                log.error("Closing statement exception",e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                log.error("Closing connection exception",e);
-            }
-        }
+        HibernateUtil.closeSession();
         return isValidated;
     }
 
@@ -118,41 +64,16 @@ class UserDaoImpl implements UserDao {
 
     @Override
     public boolean checkUsername(String username) {
-        boolean isExist = false;
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.createStatement();
-            String findQuery = "SELECT * FROM users WHERE user_name = '" + username + "'";
-            resultSet = statement.executeQuery(findQuery);
-            if (resultSet.next()) {
-                isExist = true;
-            }
-        } catch(Exception e) {
-            log.error("Check username exception",e);
-        } finally {
-            try {
-                if (resultSet!= null)
-                    resultSet.close();
-            } catch (SQLException e) {
-                log.error("Closing resultSet exception", e);
-            }
-            try {
-                if(statement!=null)
-                    statement.close();
-            } catch (SQLException e) {
-                log.error("Closing statement exception",e);
-            }
-            try {
-                if(connection!=null)
-                    connection.close();
-            } catch(SQLException e){
-                log.error("Closing connection exception",e);
-            }
-            return isExist;
+        boolean isExist = true;
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from UserTO where username = :username");
+        query.setParameter("username",  username);
+        if (query.getResultList().isEmpty()) {
+            isExist=false;
         }
+        HibernateUtil.closeSession();
+        return isExist;
     }
 
 
@@ -164,40 +85,13 @@ class UserDaoImpl implements UserDao {
 
     @Override
     public long getUserId(String username) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         long userId = 0;
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.createStatement();
-            String findRoleQuery = "SELECT id FROM users WHERE user_name = '" + username + "'";
-            resultSet = statement.executeQuery(findRoleQuery);
-            if (resultSet.next()) {
-                userId = resultSet.getLong("id");
-            }
-        } catch(Exception e) {
-            log.error("Get user id exception",e);
-        } finally {
-            try {
-                if (resultSet!= null)
-                    resultSet.close();
-            } catch (SQLException e) {
-                log.error("Closing resultSet exception", e);
-            }
-            try {
-                if(statement!=null)
-                    statement.close();
-            } catch (SQLException e) {
-                log.error("Closing statement exception",e);
-            }
-            try {
-                if(connection!=null)
-                    connection.close();
-            } catch(SQLException e){
-                log.error("Closing connection exception",e);
-            }
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Query query = session.createNativeQuery("select users.id from users where users.user_name = :username");
+        query.setParameter("username",  username);
+        userId = Long.valueOf((Integer) query.getSingleResult());
+        HibernateUtil.closeSession();
         return userId;
     }
 
@@ -209,74 +103,13 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public String getUserRole(long id) {
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
         String role = "reader";
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.createStatement();
-            String findRoleQuery = "SELECT role_name FROM user_roles WHERE id = (SELECT role_id FROM user_role_mapping WHERE user_id = '" + id + "')";
-            resultSet = statement.executeQuery(findRoleQuery);
-            if (resultSet.next()) {
-                role = resultSet.getString("role_name");
-            }
-        } catch(Exception e) {
-            log.error("Get user role exception",e);
-        } finally {
-            try {
-                if (resultSet!= null)
-                    resultSet.close();
-            } catch (SQLException e) {
-                log.error("Closing resultSet exception", e);
-            }
-            try {
-                if(statement!=null)
-                    statement.close();
-            } catch (SQLException e) {
-                log.error("Closing statement exception",e);
-            }
-            try {
-                if(connection!=null)
-                    connection.close();
-            } catch(SQLException e){
-                log.error("Closing connection exception",e);;
-            }
-        }
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        Query query = session.createNativeQuery("SELECT role_name FROM user_roles join user_role_mapping on user_roles.id = user_role_mapping.role_id where user_role_mapping.user_id = :id");
+        query.setParameter("id",id);
+        role = (String) query.getSingleResult();
+        HibernateUtil.closeSession();
         return role;
-    }
-
-    /**
-     * Method to set user role at user_roles table
-     * @param id  - user id
-     */
-    @Override
-    public void setUserRole(long id) {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        int role_id = 2; //"reader"=2
-        try {
-            connection = ConnectionPool.getInstance().getConnection();
-            String setRoleQuery = "INSERT INTO user_role_mapping (user_id, role_id) VALUES(?,?)";
-            preparedStatement = connection.prepareStatement(setRoleQuery);
-            preparedStatement.setLong(1, id);
-            preparedStatement.setInt(2,role_id);
-            preparedStatement.execute();
-        } catch(Exception e) {
-            log.error("Set user role exception",e);
-        } finally {
-            try {
-                if(preparedStatement!=null)
-                    preparedStatement.close();
-            } catch (SQLException e) {
-                log.error("Closing prepared statement exception",e);
-            }
-            try {
-                if(connection!=null)
-                    connection.close();
-            } catch(SQLException e){
-                log.error("Closing connection exception",e);
-            }
-        }
     }
 }
