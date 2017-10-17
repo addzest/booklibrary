@@ -1,28 +1,23 @@
-package com.laba.booklibrary.service.books;
+package com.laba.booklibrary.service.books.model;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Blueprint for a book object. Contain all fields to work with a book.
  */
-public class BookTO {
+@Entity
+@Table(name = "books")
+public class BookTO implements Serializable {
     private long id;
     private String title;
     private String author;
     private int publishYear;
     private String description;
     private int count;
-    private String holdType;
-    private boolean approved;
-    private long operationId;
-    private long userId;
-
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>(0);
 
     @Override
     public String toString() {
@@ -34,31 +29,20 @@ public class BookTO {
                 '}';
     }
 
+    public BookTO(){}
 
-    public long getOperationId() {
-        return operationId;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fk_bookTO", cascade = CascadeType.ALL)
+    public Set<BookOnHoldTO> getBookOnHoldTOs(){
+        return this.bookOnHoldTOs;
     }
 
-    public void setOperationId(long operationId) {
-        this.operationId = operationId;
+    public void setBookOnHoldTOs(Set<BookOnHoldTO> bookOnHoldTOs) {
+        this.bookOnHoldTOs = bookOnHoldTOs;
     }
 
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public String getHoldType() {
-        return holdType;
-    }
-
-    public void setHoldType(String holdType) {
-        this.holdType = holdType;
-    }
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false)
     public long getId() {
         return id;
     }
@@ -67,6 +51,7 @@ public class BookTO {
         this.id = id;
     }
 
+    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -75,6 +60,7 @@ public class BookTO {
         this.title = title;
     }
 
+    @Column(name = "author")
     public String getAuthor() {
         return author;
     }
@@ -83,6 +69,7 @@ public class BookTO {
         this.author = author;
     }
 
+    @Column(name = "publish_year")
     public int getPublishYear() {
         return publishYear;
     }
@@ -91,6 +78,7 @@ public class BookTO {
         this.publishYear = publishYear;
     }
 
+    @Column(name = "description")
     public String getDescription() {
         return description;
     }
@@ -99,6 +87,7 @@ public class BookTO {
         this.description = description;
     }
 
+    @Column(name = "count")
     public int getCount() {
         return count;
     }
@@ -106,4 +95,6 @@ public class BookTO {
     public void setCount(int count) {
         this.count = count;
     }
+
+
 }

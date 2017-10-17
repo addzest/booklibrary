@@ -1,29 +1,27 @@
 package com.laba.booklibrary.service.users.model;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Blueprint for a user object. Contain all fields to work with a user.
  */
+
 @Entity
 @Table(name = "users")
-public class UserTO {
+public class UserTO implements Serializable{
 
     private Long id;
-
     private String username;
-
     private String password;
-
     private String firstName;
-
     private String lastName;
-
     private String email;
-
     private Set<UserRoleTO> userRoleTOs = new HashSet<UserRoleTO>();
+    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>();
 
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -38,6 +36,15 @@ public class UserTO {
         this.userRoleTOs = userRoleTOs;
     }
 
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fk_userTO")
+    public Set<BookOnHoldTO> getBookOnHoldTOs(){
+        return this.bookOnHoldTOs;
+    }
+
+    public void setBookOnHoldTOs(Set<BookOnHoldTO> bookOnHoldTOs) {
+        this.bookOnHoldTOs = bookOnHoldTOs;
+    }
 
     public UserTO() {
     }

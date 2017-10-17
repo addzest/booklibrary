@@ -3,7 +3,7 @@ package com.laba.booklibrary.web.book;
 
 import com.laba.booklibrary.service.books.BookService;
 import com.laba.booklibrary.service.books.BookServiceImpl;
-import com.laba.booklibrary.service.books.BookTO;
+import com.laba.booklibrary.service.books.model.BookTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 

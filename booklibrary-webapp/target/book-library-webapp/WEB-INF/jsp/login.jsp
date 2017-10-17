@@ -31,13 +31,13 @@
                     <form role="form" method="post" action="login">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="login.label.username"/>" name="username" type="text" autofocus>
+                                <input class="form-control" placeholder="<fmt:message key="login.label.username"/>" name="username" type="text" autofocus required>
                                 <c:if test="${not empty loginError}">
                                     <label><fmt:message key="login.label.loginerror"/></label>
                                 </c:if>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="login.label.password"/>" name="password" type="password" value="">
+                                <input class="form-control" placeholder="<fmt:message key="login.label.password"/>" name="password" type="password" value="" required>
                             </div>
                             <fmt:message key="login.button.submit" var="buttonValue"/>
                             <input type="submit" class="btn btn-lg btn-success btn-block" value="${buttonValue}"/>
