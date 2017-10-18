@@ -1,5 +1,6 @@
 package com.laba.booklibrary.service.books;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 import org.apache.log4j.Logger;
 
@@ -101,25 +102,26 @@ public class BookServiceImpl implements BookService {
     /**
      * Method to return the book from onhold list to library list
      * @param bookId - book id
-     * @param operation_id - id of operation (taking book)
+     * @param userId - id of operation (taking book)
      */
     @Override
-    public void returnBook(long bookId, long operation_id) {
+    public void returnBook(long bookId, long userId) {
         BookTO bookTO = bookDao.getBookById(bookId);
         bookTO.setCount(bookTO.getCount() + 1);
         bookDao.updateBook(bookTO);
-        bookDao.returnBook(operation_id);
+        bookDao.returnBook(bookId, userId);
         log.info("Book " + bookTO + " returned");
     }
 
     /**
      * Method to approve taking the book
-     * @param operationId - id of operation (taking the book)
+     * @param bookId - book id
+     * @param userId - id of operation (taking book)
      */
     @Override
-    public void approveBook(long operationId) {
-        bookDao.approveBook(operationId);
-        log.info("Operation " + operationId + " approved");
+    public void approveBook(long bookId, long userId) {
+        bookDao.approveBook(bookId, userId);
+        log.info("Operation " + bookId + userId + " approved");
     }
 
     /**
@@ -128,7 +130,7 @@ public class BookServiceImpl implements BookService {
      * @return list of books, that where taken by user
      */
     @Override
-    public List<BookTO> getBooksOnHoldList(long userId) {
+    public List<BookOnHoldTO> getBooksOnHoldList(long userId) {
         return bookDao.getBooksOnHoldList(userId);
     }
 
@@ -136,7 +138,7 @@ public class BookServiceImpl implements BookService {
      * Method to get all books on hold
      * @return list of all books on hold
      */
-    public List<BookTO> getAllBooksOnHoldList() {
+    public List<BookOnHoldTO> getAllBooksOnHoldList() {
         return bookDao.getAllBooksOnHoldList();
     }
 }

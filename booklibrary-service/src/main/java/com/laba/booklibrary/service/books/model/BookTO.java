@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Blueprint for a book object. Contain all fields to work with a book.
+ * Blueprint for a book object.
  */
 @Entity
 @Table(name = "books")
@@ -17,7 +17,7 @@ public class BookTO implements Serializable {
     private int publishYear;
     private String description;
     private int count;
-    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>(0);
+    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>();
 
     @Override
     public String toString() {
@@ -31,7 +31,7 @@ public class BookTO implements Serializable {
 
     public BookTO(){}
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fk_bookTO", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.bookTO", cascade = CascadeType.ALL)
     public Set<BookOnHoldTO> getBookOnHoldTOs(){
         return this.bookOnHoldTOs;
     }
@@ -42,9 +42,9 @@ public class BookTO implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true, nullable = false)
+    @Column(name = "id")
     public long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(long id) {

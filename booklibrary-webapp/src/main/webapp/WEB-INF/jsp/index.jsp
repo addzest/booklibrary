@@ -159,37 +159,37 @@
                         <td><b><fmt:message key="index.bookList.approval"/></b></td>
                         <td><b><fmt:message key="index.bookList.actions"/></b></td>
                     </tr>
-                    <c:forEach items="${booksOnHoldList}" var="bookTO">
+                    <c:forEach items="${booksOnHoldList}" var="bookOnHoldTO">
                         <tr>
-                            <td><c:out value="${bookTO.title}" escapeXml="true"/></td>
-                            <td><c:out value="${bookTO.author}" escapeXml="true"/></td>
-                            <td><c:out value="${bookTO.publishYear}" escapeXml="true"/></td>
-                            <td><c:out value="${bookTO.description}" escapeXml="true"/></td>
+                            <td><c:out value="${bookOnHoldTO.bookTO.title}" escapeXml="true"/></td>
+                            <td><c:out value="${bookOnHoldTO.bookTO.author}" escapeXml="true"/></td>
+                            <td><c:out value="${bookOnHoldTO.bookTO.publishYear}" escapeXml="true"/></td>
+                            <td><c:out value="${bookOnHoldTO.bookTO.description}" escapeXml="true"/></td>
                             <c:if test="${sessionScope.hasRole eq 'librarian'}">
-                            <td>${bookTO.userId}</td>
+                                <td>${bookOnHoldTO.userTO.id}</td>
                             </c:if>
-                            <td><c:if test="${bookTO.holdType eq 'subscription'}">
+                            <td><c:if test="${bookOnHoldTO.holdType eq 'subscription'}">
                                 <fmt:message key="index.bookListOnHold.subscription"/>
                                 </c:if>
-                                <c:if test="${bookTO.holdType eq 'readingRoom'}">
+                                <c:if test="${bookOnHoldTO.holdType eq 'readingRoom'}">
                                     <fmt:message key="index.bookListOnHold.readingRoom"/>
                                 </c:if>
                             </td>
-                            <td><c:if test="${bookTO.approved}">
+                            <td><c:if test="${bookOnHoldTO.approved}">
                                 <fmt:message key="index.bookListOnHold.approved"/>
                             </c:if>
-                                <c:if test="${!bookTO.approved}">
+                                <c:if test="${!bookOnHoldTO.approved}">
                                     <fmt:message key="index.bookListOnHold.notApproved"/>
                                 </c:if>
                             </td>
                             <td>
                                 <c:if test="${sessionScope.hasRole eq 'reader'}">
-                                    <a href="index?action=returnBook&id=<c:out value='${bookTO.id}'/>&operationId=<c:out value='${bookTO.operationId}'/>&page=<c:out value='${currentPage}'/>"><fmt:message
+                                    <a href="index?action=returnBook&id=<c:out value='${bookOnHoldTO.bookTO.id}'/>&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>&page=<c:out value='${currentPage}'/>"><fmt:message
                                             key="index.bookList.returnBook"/></a>
                                 </c:if>
 
-                                <c:if test="${sessionScope.hasRole eq 'librarian' && not bookTO.approved}">
-                                    <a href="index?action=approveBook&operationId=<c:out value='${bookTO.operationId}'/>&page=<c:out value='${currentPage}'/>"><fmt:message
+                                <c:if test="${sessionScope.hasRole eq 'librarian' && not bookOnHoldTO.approved}">
+                                    <a href="index?action=approveBook&bookId=<c:out value='${bookOnHoldTO.bookTO.id}'/>&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>&page=<c:out value='${currentPage}'/>"><fmt:message
                                             key="index.bookList.approve"/></a>
                                 </c:if>
                             </td>

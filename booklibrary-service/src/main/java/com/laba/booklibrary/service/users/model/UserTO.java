@@ -37,7 +37,7 @@ public class UserTO implements Serializable{
     }
 
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fk_userTO")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.userTO")
     public Set<BookOnHoldTO> getBookOnHoldTOs(){
         return this.bookOnHoldTOs;
     }

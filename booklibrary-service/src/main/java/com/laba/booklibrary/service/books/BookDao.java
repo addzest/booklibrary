@@ -1,5 +1,7 @@
 package com.laba.booklibrary.service.books;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
+import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 
 import java.util.List;
@@ -18,13 +20,14 @@ interface BookDao {
 
     List<BookTO> getBookTOList();
 
-    List<BookTO> getBooksOnHoldList(long userId);
+    List<BookOnHoldTO> getBooksOnHoldList(long userId);
 
-    List<BookTO> getAllBooksOnHoldList();
+    List<BookOnHoldTO> getAllBooksOnHoldList();
 
     boolean bookOnHold (long id);
     void takeBook(long bookId, long userId, String holdType);
-    void returnBook(long operationId);
 
-    void approveBook(long operationId);
+    void returnBook(long bookId, long userId);
+
+    void approveBook(long bookId, long userId);
 }

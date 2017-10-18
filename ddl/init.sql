@@ -1,58 +1,41 @@
-create table books
+CREATE TABLE books
 (
-	id int auto_increment
-		primary key,
-	title varchar(255) null,
-	author varchar(255) null,
-	publish_year int null,
-	count int null,
-	description text null,
-	constraint id_UNIQUE
-		unique (id)
-)
-;
-
-create table books_onhold
+	id           BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	author       VARCHAR(255),
+	count        INT(11),
+	description  VARCHAR(255),
+	publish_year INT(11),
+	title        VARCHAR(255)
+);
+CREATE TABLE books_onhold
 (
-	operation_id int auto_increment
-		primary key,
-	book_id int null,
-	user_id int null,
-	hold_type varchar(255) null,
-	approved tinyint(1) null,
-	constraint books_onhold_operation_id_uindex
-		unique (operation_id)
-)
-;
-
-create table user_role_mapping
+	approved  TINYINT(4),
+	hold_type VARCHAR(255) NOT NULL,
+	user_id   BIGINT(20)   NOT NULL,
+	book_id   BIGINT(20)   NOT NULL,
+	CONSTRAINT `PRIMARY` PRIMARY KEY (book_id, user_id)
+);
+CREATE INDEX FKthh32fbe8d2vn0i9da7b8h9en
+	ON books_onhold (user_id);
+CREATE TABLE user_role_mapping
 (
-	user_id int not null,
-	role_id int not null
-)
-;
-
-create table user_roles
+	role_id BIGINT(20) NOT NULL,
+	user_id BIGINT(20) NOT NULL,
+	CONSTRAINT `PRIMARY` PRIMARY KEY (user_id, role_id)
+);
+CREATE INDEX FKl49eoylmyin6gvqydg53gps1e
+	ON user_role_mapping (role_id);
+CREATE TABLE user_roles
 (
-	id int not null
-		primary key,
-	role_name varchar(45) null,
-	constraint id_UNIQUE
-		unique (id)
-)
-;
-
-create table users
+	id        BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	role_name VARCHAR(255)
+);
+CREATE TABLE users
 (
-	id int auto_increment
-		primary key,
-	user_name varchar(255) null,
-	user_password varchar(255) null,
-	first_name varchar(255) null,
-	last_name varchar(255) null,
-	email varchar(255) null,
-	constraint id_UNIQUE
-		unique (id)
-)
-;
-
+	id            BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	email         VARCHAR(255),
+	first_name    VARCHAR(255),
+	last_name     VARCHAR(255),
+	user_password VARCHAR(255),
+	user_name     VARCHAR(255)
+);

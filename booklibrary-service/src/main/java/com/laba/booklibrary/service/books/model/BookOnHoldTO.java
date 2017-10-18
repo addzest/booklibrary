@@ -1,6 +1,7 @@
 package com.laba.booklibrary.service.books.model;
 
 import com.laba.booklibrary.service.users.model.UserTO;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,54 +9,42 @@ import java.io.Serializable;
 @Entity
 @Table(name = "books_onhold")
 @AssociationOverrides({
-        @AssociationOverride(name = "fk_bookTO",
+        @AssociationOverride(name = "pk.bookTO",
             joinColumns = @JoinColumn(name = "book_id")),
-        @AssociationOverride(name = "fk_userTO",
+        @AssociationOverride(name = "pk.userTO",
             joinColumns = @JoinColumn(name = "user_id"))})
 public class BookOnHoldTO implements Serializable{
-    private BookOnHoldIdTO fk = new BookOnHoldIdTO();
-    private long operationId;
+    private BookOnHoldIdTO pk = new BookOnHoldIdTO();
     private String holdType;
     private boolean approved;
 
     public BookOnHoldTO(){}
 
     @EmbeddedId
-    public BookOnHoldIdTO getFk(){
-        return fk;
+    public BookOnHoldIdTO getPk() {
+        return pk;
     }
 
-    public void setFk(BookOnHoldIdTO fk){
-        this.fk = fk;
+    public void setPk(BookOnHoldIdTO pk) {
+        this.pk = pk;
     }
 
     @Transient
     public BookTO getBookTO(){
-        return getFk().getBookTO();
+        return getPk().getBookTO();
     }
 
     public void setBookTO(BookTO bookTO){
-        getFk().setBookTO(bookTO);
+        getPk().setBookTO(bookTO);
     }
 
     @Transient
     public UserTO getUserTO(){
-        return getFk().getUserTO();
+        return getPk().getUserTO();
     }
 
     public void setUserTO(UserTO userTO){
-        getFk().setUserTO(userTO);
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "operation_id", nullable = false)
-    public long getOperationId() {
-        return operationId;
-    }
-
-    public void setOperationId(long operationId) {
-        this.operationId = operationId;
+        getPk().setUserTO(userTO);
     }
 
     @Column(name = "hold_type", nullable = false)
@@ -67,7 +56,7 @@ public class BookOnHoldTO implements Serializable{
         this.holdType = holdType;
     }
 
-    @Column(name = "approved")
+    @Column(name = "approved", columnDefinition = "TINYINT", length = 1)
     public boolean isApproved() {
         return approved;
     }

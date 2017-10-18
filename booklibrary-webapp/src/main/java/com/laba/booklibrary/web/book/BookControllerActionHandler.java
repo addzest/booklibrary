@@ -3,6 +3,7 @@ package com.laba.booklibrary.web.book;
 
 import com.laba.booklibrary.service.books.BookService;
 import com.laba.booklibrary.service.books.BookServiceImpl;
+import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -103,9 +104,10 @@ class BookControllerActionHandler {
     }
 
     private void approveBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("operationId"))) {
-            Long operationId = Long.parseLong(request.getParameter("operationId"));
-            bookService.approveBook(operationId);
+        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("bookId")) && StringUtils.isNotEmpty(request.getParameter("userId"))) {
+            long bookId = Long.parseLong(request.getParameter("bookId"));
+            long userId = Long.parseLong(request.getParameter("userId"));
+            bookService.approveBook(bookId, userId);
             if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                 int page = Integer.parseInt(request.getParameter("page"));
                 response.sendRedirect("index?action=listBooks&page=" + page);
@@ -142,8 +144,8 @@ class BookControllerActionHandler {
     private void returnBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
         if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "reader")) {
             Long bookId = Long.parseLong(request.getParameter("id"));
-            Long operationId = Long.parseLong(request.getParameter("operationId"));
-            bookService.returnBook(bookId, operationId);
+            Long userId = Long.parseLong(request.getParameter("userId"));
+            bookService.returnBook(bookId, userId);
             if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                 int page = Integer.parseInt(request.getParameter("page"));
                 response.sendRedirect("index?action=listBooks&page=" + page);
@@ -178,7 +180,7 @@ class BookControllerActionHandler {
 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
         if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("id"))) {
-            long id = Integer.parseInt(request.getParameter("id"));
+            long id = Long.parseLong(request.getParameter("id"));
             if (bookService.getBookById(id).getTitle() != null){
                 if (!bookService.removeBook(id)) {
                     request.setAttribute("deleteError", "deleteError");
@@ -222,11 +224,11 @@ class BookControllerActionHandler {
         request.setAttribute("bookTOList", bookTOList);
         if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "reader")) {
             Long userId = (Long) session.getAttribute("userId");
-            List<BookTO> booksOnHoldList = bookService.getBooksOnHoldList(userId);
+            List<BookOnHoldTO> booksOnHoldList = bookService.getBooksOnHoldList(userId);
             request.setAttribute("onHoldListLength", booksOnHoldList.size());
             request.setAttribute("booksOnHoldList", booksOnHoldList);
         } else if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
-            List<BookTO> booksOnHoldList = bookService.getAllBooksOnHoldList();
+            List<BookOnHoldTO> booksOnHoldList = bookService.getAllBooksOnHoldList();
             request.setAttribute("onHoldListLength", booksOnHoldList.size());
             request.setAttribute("booksOnHoldList", booksOnHoldList);
         }

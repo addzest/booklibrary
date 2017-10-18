@@ -8,6 +8,7 @@ import org.hibernate.Session;
 
 
 import javax.persistence.Query;
+import java.math.BigInteger;
 
 
 /**
@@ -88,9 +89,10 @@ class UserDaoImpl implements UserDao {
         long userId = 0;
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
-        Query query = session.createNativeQuery("select users.id from users where users.user_name = :username");
+        Query query = session.createQuery("from UserTO u where u.username = :username", UserTO.class);
         query.setParameter("username",  username);
-        userId = Long.valueOf((Integer) query.getSingleResult());
+        UserTO userTO = (UserTO) query.getSingleResult();
+        userId = userTO.getId();
         HibernateUtil.closeSession();
         return userId;
     }

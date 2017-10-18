@@ -46,6 +46,12 @@
                 <version>5.2.10.Final</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-c3p0</artifactId>
+                <version>5.2.10.Final</version>
+            </dependency>
+
 
             <!--TEST DEPENDENCIES-->
 

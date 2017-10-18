@@ -59,10 +59,6 @@
     </filter-mapping>
 
 
-    
-    <listener>
-        <listener-class>com.laba.booklibrary.web.listener.LibraryServletContextListener</listener-class>
-    </listener>
     <welcome-file-list>
         <welcome-file>/index</welcome-file>
     </welcome-file-list>
