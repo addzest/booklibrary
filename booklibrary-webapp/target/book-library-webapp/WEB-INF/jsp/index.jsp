@@ -166,7 +166,7 @@
                             <td><c:out value="${bookOnHoldTO.bookTO.publishYear}" escapeXml="true"/></td>
                             <td><c:out value="${bookOnHoldTO.bookTO.description}" escapeXml="true"/></td>
                             <c:if test="${sessionScope.hasRole eq 'librarian'}">
-                            <td>${bookOnHoldTO.userTO.id}</td>
+                                <td>${bookOnHoldTO.userTO.id}</td>
                             </c:if>
                             <td><c:if test="${bookOnHoldTO.holdType eq 'subscription'}">
                                 <fmt:message key="index.bookListOnHold.subscription"/>

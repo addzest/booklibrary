@@ -86,7 +86,7 @@ class BookDaoImpl implements BookDao {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         searchRequest = "%" + searchRequest + "%";
-        Query query = session.createNativeQuery("SELECT * FROM books WHERE lower(CONCAT(title,' ',author,' ',publish_year,' ',count,' ', description)) LIKE lower(' : searchRequest')", BookTO.class);
+        Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest)", BookTO.class);
         query.setParameter("searchRequest", searchRequest);
         List<BookTO> foundBooks = query.getResultList();
         HibernateUtil.closeSession();
