@@ -2,16 +2,17 @@ package com.laba.booklibrary.service.users.model;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "user_roles")
-public class UserRoleTO {
+public class UserRoleTO implements Serializable {
     private long id;
     private String roleName;
-    private Set<UserTO> userTOs = new HashSet<UserTO>();
+    private Set<UserTO> userTOs = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role_mapping",
@@ -25,8 +26,6 @@ public class UserRoleTO {
         this.userTOs = userTOs;
     }
 
-    public UserRoleTO() {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -20,8 +20,8 @@ public class UserTO implements Serializable{
     private String firstName;
     private String lastName;
     private String email;
-    private Set<UserRoleTO> userRoleTOs = new HashSet<UserRoleTO>();
-    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>();
+    private Set<UserRoleTO> userRoleTOs = new HashSet<>();
+    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<>();
 
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -46,8 +46,6 @@ public class UserTO implements Serializable{
         this.bookOnHoldTOs = bookOnHoldTOs;
     }
 
-    public UserTO() {
-    }
 
     @Override
     public String toString() {

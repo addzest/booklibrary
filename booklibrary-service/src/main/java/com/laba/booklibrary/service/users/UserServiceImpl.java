@@ -21,8 +21,7 @@ public class UserServiceImpl implements UserService{
      */
     @Override
     public boolean checkUser(String username) {
-        boolean isExist = this.userDao.checkUsername(username);
-        return isExist;
+        return this.userDao.checkUsername(username);
     }
 
     /**
@@ -32,7 +31,6 @@ public class UserServiceImpl implements UserService{
     @Override
     public void addUser(UserTO userTO) {
         this.userDao.addUser(userTO);
-       // this.userDao.setUserRole(userDao.getUserId(userTO.getUsername()));
         log.info("New user added "+ userTO);
     }
 

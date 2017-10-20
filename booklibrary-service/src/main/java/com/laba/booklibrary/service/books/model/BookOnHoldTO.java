@@ -1,8 +1,6 @@
 package com.laba.booklibrary.service.books.model;
 
 import com.laba.booklibrary.service.users.model.UserTO;
-import org.hibernate.annotations.Type;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,7 +16,6 @@ public class BookOnHoldTO implements Serializable{
     private String holdType;
     private boolean approved;
 
-    public BookOnHoldTO(){}
 
     @EmbeddedId
     public BookOnHoldIdTO getPk() {

@@ -1,6 +1,5 @@
 package com.laba.booklibrary.service.books;
 
-import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
 import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 

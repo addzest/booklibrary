@@ -17,7 +17,7 @@ public class BookTO implements Serializable {
     private int publishYear;
     private String description;
     private int count;
-    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<BookOnHoldTO>();
+    private Set<BookOnHoldTO> bookOnHoldTOs = new HashSet<>();
 
     @Override
     public String toString() {
@@ -29,7 +29,6 @@ public class BookTO implements Serializable {
                 '}';
     }
 
-    public BookTO(){}
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.bookTO", cascade = CascadeType.ALL)
     public Set<BookOnHoldTO> getBookOnHoldTOs(){

@@ -3,20 +3,19 @@ package com.laba.booklibrary.service.books;
 import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
 import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
-import com.laba.booklibrary.service.connection.HibernateUtil;
 import com.laba.booklibrary.service.users.model.UserTO;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
-
 import javax.persistence.Query;
 import java.util.List;
+
+import static com.laba.booklibrary.service.connection.HibernateUtil.closeSession;
+import static com.laba.booklibrary.service.connection.HibernateUtil.getSession;
 
 
 /**
  * DAO access layer for books and books_onhold tables
  */
 class BookDaoImpl implements BookDao {
-    private static final Logger log = Logger.getLogger(BookDaoImpl.class);
     private static final boolean DEFAULT_APPROVE = false;
     private static final boolean APPROVED = true;
     /**
@@ -25,11 +24,11 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public void addBook(BookTO bookTO) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         session.save(bookTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
     /**
@@ -38,11 +37,11 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public void updateBook(BookTO bookTO) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         session.update(bookTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
 
@@ -52,12 +51,12 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public void removeBook(long id) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         BookTO bookTO = session.get(BookTO.class, id);
         session.remove(bookTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
 
@@ -69,10 +68,10 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public BookTO getBookById(long id) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         BookTO bookTO = session.get(BookTO.class, id);
-        HibernateUtil.closeSession();
+        closeSession();
         return bookTO;
     }
 
@@ -83,13 +82,13 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public List<BookTO> findBooks(String searchRequest) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
-        searchRequest = "%" + searchRequest + "%";
+        String searchRequestForQuery = "%" + searchRequest + "%";
         Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest)", BookTO.class);
-        query.setParameter("searchRequest", searchRequest);
+        query.setParameter("searchRequest", searchRequestForQuery);
         List<BookTO> foundBooks = query.getResultList();
-        HibernateUtil.closeSession();
+        closeSession();
         return foundBooks;
     }
 
@@ -100,11 +99,11 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public List<BookTO> getBookTOList() {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from BookTO", BookTO.class);
         List<BookTO> bookTOList = query.getResultList();
-        HibernateUtil.closeSession();
+        closeSession();
         return bookTOList;
     }
 
@@ -117,7 +116,7 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public void takeBook(long bookId, long userId, String holdType){
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         BookOnHoldTO bookOnHoldTO = new BookOnHoldTO();
         bookOnHoldTO.setBookTO(session.get(BookTO.class, bookId));
@@ -126,7 +125,7 @@ class BookDaoImpl implements BookDao {
         bookOnHoldTO.setApproved(DEFAULT_APPROVE);
         session.save(bookOnHoldTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
 
@@ -137,14 +136,14 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public void returnBook(long bookId, long userId) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
         bookOnHoldIdTO.setUserTO(session.get(UserTO.class, userId));
         bookOnHoldIdTO.setBookTO(session.get(BookTO.class, bookId));
         session.remove(session.get(BookOnHoldTO.class, bookOnHoldIdTO));
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
     /**
@@ -155,7 +154,7 @@ class BookDaoImpl implements BookDao {
 
     @Override
     public void approveBook(long bookId, long userId) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
         bookOnHoldIdTO.setUserTO(session.get(UserTO.class, userId));
@@ -164,7 +163,7 @@ class BookDaoImpl implements BookDao {
         bookOnHoldTO.setApproved(APPROVED);
         session.update(bookOnHoldTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
     /**
@@ -176,14 +175,14 @@ class BookDaoImpl implements BookDao {
     @Override
     public boolean bookOnHold(long id) {
         boolean bookOnHold = true;
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("FROM BookOnHoldTO b WHERE b.pk.bookTO.id= :id");
         query.setParameter("id", id);
         if (query.getResultList().isEmpty()) {
             bookOnHold = false;
         }
-        HibernateUtil.closeSession();
+        closeSession();
         return bookOnHold;
     }
 
@@ -194,12 +193,12 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public List<BookOnHoldTO> getBooksOnHoldList(long userId) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from BookOnHoldTO where pk.userTO.id= :userId", BookOnHoldTO.class);
         query.setParameter("userId", userId);
         List<BookOnHoldTO> booksOnHoldList = query.getResultList();
-        HibernateUtil.closeSession();
+        closeSession();
         return booksOnHoldList;
     }
 
@@ -210,11 +209,11 @@ class BookDaoImpl implements BookDao {
      */
     @Override
     public List<BookOnHoldTO> getAllBooksOnHoldList() {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from BookOnHoldTO", BookOnHoldTO.class);
         List<BookOnHoldTO> booksOnHoldList = query.getResultList();
-        HibernateUtil.closeSession();
+        closeSession();
         return booksOnHoldList;
     }
 }

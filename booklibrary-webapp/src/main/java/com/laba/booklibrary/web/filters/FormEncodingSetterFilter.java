@@ -12,7 +12,7 @@ public class FormEncodingSetterFilter implements Filter {
     private static final String ENCODING_INIT_PARAM_NAME = "encoding";
     private String encoding;
 
-    public void destroy(){
+    public void destroy() { //default
     }
 
 

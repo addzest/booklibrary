@@ -20,60 +20,59 @@ import java.util.List;
  */
 
 class BookControllerActionHandler {
+    private static final String HAS_ROLE = "hasRole";
+    private static final String LIBRARIAN = "librarian";
+    private static final String START_PAGE = "/index?action=listBooks";
+    private static final String USER_ID = "userId";
+    private static final String ACTUAL_PAGE = "/index?action=listBooks&page=";
+    private static final String READER = "reader";
+    private static final String SEARCH_REQUEST = "searchRequest";
+
 
     private BookService bookService = new BookServiceImpl();
 
     void execute(String action, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         switch (action) {
-            case "listBooks": {
+            case "listBooks":
                 listBooks(request, response, session);
                 break;
-            }
-            case "delete": {
+            case "delete":
                 deleteBook(request, response, session);
                 break;
-            }
-            case "edit": {
+            case "edit":
                 editBookPage(request, response, session);
                 break;
-            }
-            case "addBook": {
+            case "addBook":
                 addBookPage(request, response, session);
                 break;
-            }
-            case "returnBook": {
+            case "returnBook":
                 returnBook(request, response, session);
                 break;
-            }
-            case "takeBook": {
+            case "takeBook":
                 takeBook(request, response, session);
                 break;
-            }
-            case "approveBook": {
+            case "approveBook":
                 approveBook(request, response, session);
                 break;
-            }
-            case "saveBook": {
+            case "saveBook":
                 saveBook(request, response, session);
                 break;
-            }
-            default: {
+            default:
                 listBooks(request, response, session);
                 break;
-            }
         }
     }
 
     private void addBookPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN)) {
             request.getRequestDispatcher("WEB-INF/jsp/book/bookForm.jsp").forward(request, response);
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void saveBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN)) {
             BookTO bookTO = new BookTO();
             String title = request.getParameter("title");
             bookTO.setTitle(title);
@@ -92,73 +91,73 @@ class BookControllerActionHandler {
                 if (existingBookTO != null) {
                     bookTO.setId(bookId);
                     bookService.updateBook(bookTO);
-                    response.sendRedirect("index?action=listBooks");
+                    response.sendRedirect(START_PAGE);
                 }
             } else {
                 bookService.addBook(bookTO);
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void approveBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("bookId")) && StringUtils.isNotEmpty(request.getParameter("userId"))) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN) && StringUtils.isNotEmpty(request.getParameter("bookId")) && StringUtils.isNotEmpty(request.getParameter(USER_ID))) {
             long bookId = Long.parseLong(request.getParameter("bookId"));
-            long userId = Long.parseLong(request.getParameter("userId"));
+            long userId = Long.parseLong(request.getParameter(USER_ID));
             bookService.approveBook(bookId, userId);
             if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                 int page = Integer.parseInt(request.getParameter("page"));
-                response.sendRedirect("index?action=listBooks&page=" + page);
+                response.sendRedirect(ACTUAL_PAGE + page);
             } else {
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void takeBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "reader")) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), READER)) {
             Long bookId = Long.parseLong(request.getParameter("id"));
             BookTO bookTO = bookService.getBookById(bookId);
             if (bookTO.getCount()>0){
-                Long userId = (Long) session.getAttribute("userId");
+                Long userId = (Long) session.getAttribute(USER_ID);
                 String holdType = request.getParameter("holdType");
                 bookService.takeBook(bookId, userId, holdType);
                 if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                     int page = Integer.parseInt(request.getParameter("page"));
-                    response.sendRedirect("index?action=listBooks&page=" + page);
+                    response.sendRedirect(ACTUAL_PAGE + page);
                 } else {
-                    response.sendRedirect("index?action=listBooks");
+                    response.sendRedirect(START_PAGE);
                 }
             } else {
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void returnBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "reader")) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), READER)) {
             Long bookId = Long.parseLong(request.getParameter("id"));
-            Long userId = Long.parseLong(request.getParameter("userId"));
+            Long userId = Long.parseLong(request.getParameter(USER_ID));
             bookService.returnBook(bookId, userId);
             if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                 int page = Integer.parseInt(request.getParameter("page"));
-                response.sendRedirect("index?action=listBooks&page=" + page);
+                response.sendRedirect(ACTUAL_PAGE + page);
             } else {
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void editBookPage(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN)) {
             String id = request.getParameter("id");
             request.setAttribute("id", id);
             if (!StringUtils.isEmpty(id) && NumberUtils.isCreatable(id)) {
@@ -168,18 +167,18 @@ class BookControllerActionHandler {
                     request.setAttribute("bookTO", bookTO);
                     request.getRequestDispatcher("WEB-INF/jsp/book/bookForm.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect("index?action=listBooks");
+                    response.sendRedirect(START_PAGE);
                 }
             } else {
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException, ServletException {
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian") && StringUtils.isNotEmpty(request.getParameter("id"))) {
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN) && StringUtils.isNotEmpty(request.getParameter("id"))) {
             long id = Long.parseLong(request.getParameter("id"));
             if (bookService.getBookById(id).getTitle() != null){
                 if (!bookService.removeBook(id)) {
@@ -187,24 +186,24 @@ class BookControllerActionHandler {
                 }
                 if (StringUtils.isNotEmpty(request.getParameter("page"))) {
                     int page = Integer.parseInt(request.getParameter("page"));
-                    request.getRequestDispatcher("index?action=listBooks&page=" + page).forward(request,response);
+                    request.getRequestDispatcher(ACTUAL_PAGE + page).forward(request, response);
                 } else {
-                    request.getRequestDispatcher("index?action=listBooks").forward(request,response);
+                    request.getRequestDispatcher(START_PAGE).forward(request, response);
                 }
             }
             else {
-                response.sendRedirect("index?action=listBooks");
+                response.sendRedirect(START_PAGE);
             }
         } else {
-            response.sendRedirect("index?action=listBooks");
+            response.sendRedirect(START_PAGE);
         }
     }
 
     private void listBooks(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         List<BookTO> bookTOList;
-        if (StringUtils.isNotEmpty(request.getParameter("searchRequest"))) {
-            request.setAttribute("searchRequest", request.getParameter("searchRequest"));
-            bookTOList = bookService.findBooks(request.getParameter("searchRequest"));
+        if (StringUtils.isNotEmpty(request.getParameter(SEARCH_REQUEST))) {
+            request.setAttribute(SEARCH_REQUEST, request.getParameter(SEARCH_REQUEST));
+            bookTOList = bookService.findBooks(request.getParameter(SEARCH_REQUEST));
         } else {
             bookTOList = bookService.getBookTOList();
         }
@@ -222,12 +221,12 @@ class BookControllerActionHandler {
         request.setAttribute("listLength", listLength);
         request.setAttribute("currentPage", page);
         request.setAttribute("bookTOList", bookTOList);
-        if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "reader")) {
-            Long userId = (Long) session.getAttribute("userId");
+        if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), READER)) {
+            Long userId = (Long) session.getAttribute(USER_ID);
             List<BookOnHoldTO> booksOnHoldList = bookService.getBooksOnHoldList(userId);
             request.setAttribute("onHoldListLength", booksOnHoldList.size());
             request.setAttribute("booksOnHoldList", booksOnHoldList);
-        } else if (session != null && StringUtils.equals((String) session.getAttribute("hasRole"), "librarian")) {
+        } else if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), LIBRARIAN)) {
             List<BookOnHoldTO> booksOnHoldList = bookService.getAllBooksOnHoldList();
             request.setAttribute("onHoldListLength", booksOnHoldList.size());
             request.setAttribute("booksOnHoldList", booksOnHoldList);

@@ -18,13 +18,15 @@ import java.io.IOException;
  */
 
 public class LoginServlet extends HttpServlet {
-    private UserService userService = new UserServiceImpl();
+    private static final String HAS_ROLE = "hasRole";
+    private static final String START_PAGE = "/index?action=listBooks";
+    private static UserService userService = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        if (session!=null && StringUtils.isNotEmpty((CharSequence) session.getAttribute("hasRole"))){
-            response.sendRedirect("/index?action=listBooks");
+        if (StringUtils.isNotEmpty((CharSequence) session.getAttribute(HAS_ROLE))) {
+            response.sendRedirect(START_PAGE);
         }else {
             request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request,response);
         }
@@ -33,8 +35,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void doPost (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        if (session!=null && StringUtils.isNotEmpty((CharSequence) session.getAttribute("hasRole"))){
-            response.sendRedirect("/index?action=listBooks");
+        if (StringUtils.isNotEmpty((CharSequence) session.getAttribute(HAS_ROLE))) {
+            response.sendRedirect(START_PAGE);
         } else {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
@@ -43,8 +45,8 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("name", username);
                 session.setAttribute("password", password);
                 session.setAttribute("userId", userService.getUserId(username));
-                session.setAttribute("hasRole", roleName);
-                response.sendRedirect("/index?action=listBooks");
+                session.setAttribute(HAS_ROLE, roleName);
+                response.sendRedirect(START_PAGE);
             } else {
                 request.setAttribute("loginError", "loginError");
                 request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);

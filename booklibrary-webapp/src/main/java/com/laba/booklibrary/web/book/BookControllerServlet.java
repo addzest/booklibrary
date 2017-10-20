@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class BookControllerServlet extends HttpServlet {
 
-    private BookControllerActionHandler bookControllerActionHandler = new BookControllerActionHandler();
+    private static BookControllerActionHandler bookControllerActionHandler = new BookControllerActionHandler();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

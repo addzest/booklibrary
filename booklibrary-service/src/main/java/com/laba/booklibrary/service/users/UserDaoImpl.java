@@ -1,22 +1,21 @@
 package com.laba.booklibrary.service.users;
 
-import com.laba.booklibrary.service.connection.HibernateUtil;
+
 import com.laba.booklibrary.service.users.model.UserRoleTO;
 import com.laba.booklibrary.service.users.model.UserTO;
-import org.apache.log4j.Logger;
 import org.hibernate.Session;
-
-
 import javax.persistence.Query;
-import java.math.BigInteger;
+
+import static com.laba.booklibrary.service.connection.HibernateUtil.closeSession;
+import static com.laba.booklibrary.service.connection.HibernateUtil.getSession;
 
 
 /**
  * DAO access layer for users table
  */
 class UserDaoImpl implements UserDao {
-    private static final Logger log = Logger.getLogger(UserDaoImpl.class);
     private static final long DEFAULT_ROLE_ID = 2;// 2- reader
+    private static final String USERNAME = "username";
 
     /**
      * Method to add user to users table
@@ -25,13 +24,13 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public void addUser(UserTO userTO) {
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         UserRoleTO userRoleTO = session.get(UserRoleTO.class, DEFAULT_ROLE_ID);
         userRoleTO.getUserTOs().add(userTO);
         session.save(userRoleTO);
         session.getTransaction().commit();
-        HibernateUtil.closeSession();
+        closeSession();
     }
 
     /**
@@ -44,15 +43,15 @@ class UserDaoImpl implements UserDao {
     @Override
     public boolean validateUser(String username, String password) {
         boolean isValidated = false;
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from UserTO where username = :username and password = :password");
-        query.setParameter("username",  username);
+        query.setParameter(USERNAME, username);
         query.setParameter("password", password);
         if (!query.getResultList().isEmpty()) {
             isValidated=true;
         }
-        HibernateUtil.closeSession();
+        closeSession();
         return isValidated;
     }
 
@@ -66,14 +65,14 @@ class UserDaoImpl implements UserDao {
     @Override
     public boolean checkUsername(String username) {
         boolean isExist = true;
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from UserTO where username = :username");
-        query.setParameter("username",  username);
+        query.setParameter(USERNAME, username);
         if (query.getResultList().isEmpty()) {
             isExist=false;
         }
-        HibernateUtil.closeSession();
+        closeSession();
         return isExist;
     }
 
@@ -86,14 +85,13 @@ class UserDaoImpl implements UserDao {
 
     @Override
     public long getUserId(String username) {
-        long userId = 0;
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from UserTO u where u.username = :username", UserTO.class);
-        query.setParameter("username",  username);
+        query.setParameter(USERNAME, username);
         UserTO userTO = (UserTO) query.getSingleResult();
-        userId = userTO.getId();
-        HibernateUtil.closeSession();
+        long userId = userTO.getId();
+        closeSession();
         return userId;
     }
 
@@ -105,13 +103,12 @@ class UserDaoImpl implements UserDao {
      */
     @Override
     public String getUserRole(long id) {
-        String role = "reader";
-        Session session = HibernateUtil.getSession();
+        Session session = getSession();
         session.beginTransaction();
         Query query = session.createNativeQuery("SELECT role_name FROM user_roles join user_role_mapping on user_roles.id = user_role_mapping.role_id where user_role_mapping.user_id = :id");
         query.setParameter("id",id);
-        role = (String) query.getSingleResult();
-        HibernateUtil.closeSession();
+        String role = (String) query.getSingleResult();
+        closeSession();
         return role;
     }
 }
