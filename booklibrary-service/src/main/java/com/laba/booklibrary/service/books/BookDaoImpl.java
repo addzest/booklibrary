@@ -78,7 +78,7 @@ class BookDaoImpl implements BookDao {
     /**
      * Method find books in books table containing searchRequest
      * @param searchRequest - row to find
-     * @return list of books
+     * @return list of found books
      */
     @Override
     public List<BookTO> findBooks(String searchRequest) {
@@ -189,7 +189,7 @@ class BookDaoImpl implements BookDao {
     /**
      * Method takes books on hold list by user id
      * @param userId - user id
-     * @return List<BookTO> - list of books instances
+     * @return List<BookOnHoldTO> - list of books taken by user
      */
     @Override
     public List<BookOnHoldTO> getBooksOnHoldList(long userId) {
