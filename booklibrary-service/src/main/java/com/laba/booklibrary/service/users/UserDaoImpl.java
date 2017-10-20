@@ -19,7 +19,6 @@ class UserDaoImpl implements UserDao {
 
     /**
      * Method to add user to users table
-     *
      * @param userTO - user instance
      */
     @Override

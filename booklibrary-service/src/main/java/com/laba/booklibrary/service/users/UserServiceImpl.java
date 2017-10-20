@@ -14,7 +14,6 @@ public class UserServiceImpl implements UserService{
 
     /**
      * Method to check if username is already exist
-     *
      * @param username -  user name
      * @return <code>true</code> if the username is already exist;
      * <code>false</code> otherwise.
