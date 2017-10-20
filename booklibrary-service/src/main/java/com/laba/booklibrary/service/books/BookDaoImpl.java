@@ -130,7 +130,7 @@ class BookDaoImpl implements BookDao {
 
 
     /**
-     * Method removes book from books_onhold table by operation id
+     * Method removes book from books_onhold table
      * @param bookId - book id
      * @param userId - user id
      */
