@@ -204,16 +204,20 @@ class BookControllerActionHandler {
         int recordsPerPage = 5;
         int page = 1;
         int bookCount;
+        String orderBy = "title";
         if (request.getParameter("page") != null) {
             page = Integer.parseInt(request.getParameter("page"));
+        }
+        if (session.getAttribute("orderBy") != null) {
+            orderBy = (String) session.getAttribute("orderBy");
         }
         if (StringUtils.isNotEmpty(request.getParameter(SEARCH_REQUEST))) {
             request.setAttribute(SEARCH_REQUEST, request.getParameter(SEARCH_REQUEST));
             bookCount = bookService.getBookTOCountWithSearchRequest(request.getParameter(SEARCH_REQUEST));
-            bookTOList = bookService.findBooks(request.getParameter(SEARCH_REQUEST), recordsPerPage, page);
+            bookTOList = bookService.findBooks(request.getParameter(SEARCH_REQUEST), recordsPerPage, page, orderBy);
         } else {
             bookCount = bookService.getBookTOCount();
-            bookTOList = bookService.getBookTOList(recordsPerPage, page);
+            bookTOList = bookService.getBookTOList(recordsPerPage, page, orderBy);
         }
         if (bookCount > recordsPerPage) {
             int numberOfPages = (int) Math.ceil((double) bookCount / recordsPerPage);

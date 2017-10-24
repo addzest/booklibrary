@@ -183,19 +183,20 @@ table.dataTable thead .sorting_desc,
 table.dataTable thead .sorting_asc_disabled,
 table.dataTable thead .sorting_desc_disabled {
   background: transparent;
+  cursor: pointer;
 }
 table.dataTable thead .sorting_asc:after {
   content: "\f0de";
   float: right;
-  font-family: fontawesome;
+
 }
 table.dataTable thead .sorting_desc:after {
   content: "\f0dd";
   float: right;
-  font-family: fontawesome;
+
 }
 table.dataTable thead .sorting:after {
-  content: "\f0dc";
+  content: "\f0dd";
   float: right;
   font-family: fontawesome;
   color: rgba(50, 50, 50, 0.5);

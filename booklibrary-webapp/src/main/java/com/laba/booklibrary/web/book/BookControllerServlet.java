@@ -17,6 +17,7 @@ import java.io.IOException;
 
 public class BookControllerServlet extends HttpServlet {
 
+    private static final String ORDER_BY = "orderBy";
     private static BookControllerActionHandler bookControllerActionHandler = new BookControllerActionHandler();
 
     @Override
@@ -33,6 +34,9 @@ public class BookControllerServlet extends HttpServlet {
         }
         request.setAttribute("action", action);
         HttpSession session = request.getSession();
+        if (StringUtils.isNotEmpty(request.getParameter(ORDER_BY))) {
+            session.setAttribute(ORDER_BY, request.getParameter(ORDER_BY));
+        }
         bookControllerActionHandler.execute(action, request, response, session);
     }
 }

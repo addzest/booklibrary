@@ -12,9 +12,9 @@ public interface BookService {
     void updateBook(BookTO bookTO);
     BookTO getBookById(long id);
 
-    List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage);
+    List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage, String orderBy);
 
-    List<BookTO> getBookTOList(int recordsPerPage, int currentPage);
+    List<BookTO> getBookTOList(int recordsPerPage, int currentPage, String orderBy);
 
     int getBookTOCount();
 

@@ -16,13 +16,13 @@ interface BookDao {
 
     BookTO  getBookById(long id);
 
-    List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage);
+    List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage, String orderBy);
 
     int getBookTOCount();
 
     int getBookTOCountWithSearchRequest(String searchRequest);
 
-    List<BookTO> getBookTOList(int recordsPerPage, int currentPage);
+    List<BookTO> getBookTOList(int recordsPerPage, int currentPage, String orderBy);
 
     List<BookOnHoldTO> getBooksOnHoldList(long userId);
 

@@ -66,8 +66,8 @@ public class BookServiceImpl implements BookService {
      * @return book list
      */
     @Override
-    public List<BookTO> getBookTOList(int recordsPerPage, int currentPage) {
-        return bookDao.getBookTOList(recordsPerPage, currentPage);
+    public List<BookTO> getBookTOList(int recordsPerPage, int currentPage, String orderBy) {
+        return bookDao.getBookTOList(recordsPerPage, currentPage, orderBy);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class BookServiceImpl implements BookService {
      * @return list of books, that containing searchRequest
      */
     @Override
-    public List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage) {
-        return bookDao.findBooks(searchRequest, recordsPerPage, currentPage);
+    public List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage, String orderBy) {
+        return bookDao.findBooks(searchRequest, recordsPerPage, currentPage, orderBy);
     }
 
     /**

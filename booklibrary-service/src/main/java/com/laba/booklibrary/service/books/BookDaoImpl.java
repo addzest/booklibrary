@@ -6,7 +6,6 @@ import com.laba.booklibrary.service.books.model.BookTO;
 import com.laba.booklibrary.service.users.model.UserTO;
 import org.hibernate.Session;
 import org.hibernate.type.IntegerType;
-
 import javax.persistence.Query;
 import java.util.List;
 
@@ -83,12 +82,13 @@ class BookDaoImpl implements BookDao {
      * @return list of found books
      */
     @Override
-    public List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage) {
+    public List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage, String orderBy) {
         Session session = getSession();
         session.beginTransaction();
         String searchRequestForQuery = "%" + searchRequest + "%";
-        Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest)", BookTO.class);
+        Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest) order by :orderBy", BookTO.class);
         query.setParameter("searchRequest", searchRequestForQuery);
+        query.setParameter("orderBy", orderBy);
         query.setFirstResult((currentPage - 1) * recordsPerPage);
         query.setMaxResults(recordsPerPage);
         List<BookTO> foundBooks = query.getResultList();
@@ -124,10 +124,10 @@ class BookDaoImpl implements BookDao {
      * @return list of books
      */
     @Override
-    public List<BookTO> getBookTOList(int recordsPerPage, int currentPage) {
+    public List<BookTO> getBookTOList(int recordsPerPage, int currentPage, String orderBy) {
         Session session = getSession();
         session.beginTransaction();
-        Query query = session.createQuery("from BookTO", BookTO.class);
+        Query query = session.createNativeQuery("select * from books order by " + orderBy + " asc ", BookTO.class);
         query.setFirstResult((currentPage - 1) * recordsPerPage);
         query.setMaxResults(recordsPerPage);
         List<BookTO> bookTOList = query.getResultList();
