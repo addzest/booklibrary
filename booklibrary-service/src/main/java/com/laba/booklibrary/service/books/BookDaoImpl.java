@@ -5,6 +5,8 @@ import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 import com.laba.booklibrary.service.users.model.UserTO;
 import org.hibernate.Session;
+import org.hibernate.type.IntegerType;
+
 import javax.persistence.Query;
 import java.util.List;
 
@@ -81,15 +83,39 @@ class BookDaoImpl implements BookDao {
      * @return list of found books
      */
     @Override
-    public List<BookTO> findBooks(String searchRequest) {
+    public List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage) {
         Session session = getSession();
         session.beginTransaction();
         String searchRequestForQuery = "%" + searchRequest + "%";
         Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest)", BookTO.class);
         query.setParameter("searchRequest", searchRequestForQuery);
+        query.setFirstResult((currentPage - 1) * recordsPerPage);
+        query.setMaxResults(recordsPerPage);
         List<BookTO> foundBooks = query.getResultList();
         closeSession();
         return foundBooks;
+    }
+
+    @Override
+    public int getBookTOCount() {
+        Session session = getSession();
+        session.beginTransaction();
+        Query getCount = session.createNativeQuery("select count(*) as count from books").addScalar("count", IntegerType.INSTANCE);
+        int bookCount = (int) getCount.getSingleResult();
+        closeSession();
+        return bookCount;
+    }
+
+    @Override
+    public int getBookTOCountWithSearchRequest(String searchRequest) {
+        Session session = getSession();
+        session.beginTransaction();
+        String searchRequestForQuery = "%" + searchRequest + "%";
+        Query getCountWithSearchRequest = session.createNativeQuery("select count(*) as count from books where lower(concat(title,' ',author,' ',publish_year,' ',count,' ',description)) like lower(:searchRequest)").addScalar("count", IntegerType.INSTANCE);
+        getCountWithSearchRequest.setParameter("searchRequest", searchRequestForQuery);
+        int bookCountWithSearchRequest = (int) getCountWithSearchRequest.getSingleResult();
+        closeSession();
+        return bookCountWithSearchRequest;
     }
 
 
@@ -98,10 +124,12 @@ class BookDaoImpl implements BookDao {
      * @return list of books
      */
     @Override
-    public List<BookTO> getBookTOList() {
+    public List<BookTO> getBookTOList(int recordsPerPage, int currentPage) {
         Session session = getSession();
         session.beginTransaction();
         Query query = session.createQuery("from BookTO", BookTO.class);
+        query.setFirstResult((currentPage - 1) * recordsPerPage);
+        query.setMaxResults(recordsPerPage);
         List<BookTO> bookTOList = query.getResultList();
         closeSession();
         return bookTOList;

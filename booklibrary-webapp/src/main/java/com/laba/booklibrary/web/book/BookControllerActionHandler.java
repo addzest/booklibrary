@@ -201,24 +201,25 @@ class BookControllerActionHandler {
 
     private void listBooks(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws ServletException, IOException {
         List<BookTO> bookTOList;
-        if (StringUtils.isNotEmpty(request.getParameter(SEARCH_REQUEST))) {
-            request.setAttribute(SEARCH_REQUEST, request.getParameter(SEARCH_REQUEST));
-            bookTOList = bookService.findBooks(request.getParameter(SEARCH_REQUEST));
-        } else {
-            bookTOList = bookService.getBookTOList();
-        }
-        int listLength = bookTOList.size();
         int recordsPerPage = 5;
         int page = 1;
-        if (listLength > recordsPerPage) {
-            int numberOfPages = (int) Math.ceil((double) listLength / recordsPerPage);
-            request.setAttribute("numberOfPages", numberOfPages);
-            if (request.getParameter("page") != null) {
-                page = Integer.parseInt(request.getParameter("page"));
-            }
-            bookTOList = bookTOList.subList((page - 1) * recordsPerPage, Math.min(listLength, page * recordsPerPage));
+        int bookCount;
+        if (request.getParameter("page") != null) {
+            page = Integer.parseInt(request.getParameter("page"));
         }
-        request.setAttribute("listLength", listLength);
+        if (StringUtils.isNotEmpty(request.getParameter(SEARCH_REQUEST))) {
+            request.setAttribute(SEARCH_REQUEST, request.getParameter(SEARCH_REQUEST));
+            bookCount = bookService.getBookTOCountWithSearchRequest(request.getParameter(SEARCH_REQUEST));
+            bookTOList = bookService.findBooks(request.getParameter(SEARCH_REQUEST), recordsPerPage, page);
+        } else {
+            bookCount = bookService.getBookTOCount();
+            bookTOList = bookService.getBookTOList(recordsPerPage, page);
+        }
+        if (bookCount > recordsPerPage) {
+            int numberOfPages = (int) Math.ceil((double) bookCount / recordsPerPage);
+            request.setAttribute("numberOfPages", numberOfPages);
+        }
+        request.setAttribute("listLength", bookCount);
         request.setAttribute("currentPage", page);
         request.setAttribute("bookTOList", bookTOList);
         if (StringUtils.equals((String) session.getAttribute(HAS_ROLE), READER)) {

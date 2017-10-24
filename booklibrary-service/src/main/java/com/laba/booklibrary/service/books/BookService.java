@@ -11,8 +11,14 @@ public interface BookService {
     boolean removeBook(long id);
     void updateBook(BookTO bookTO);
     BookTO getBookById(long id);
-    List<BookTO> findBooks(String searchRequest);
-    List<BookTO> getBookTOList();
+
+    List<BookTO> findBooks(String searchRequest, int recordsPerPage, int currentPage);
+
+    List<BookTO> getBookTOList(int recordsPerPage, int currentPage);
+
+    int getBookTOCount();
+
+    int getBookTOCountWithSearchRequest(String searchRequest);
 
     List<BookOnHoldTO> getBooksOnHoldList(long userId);
 
