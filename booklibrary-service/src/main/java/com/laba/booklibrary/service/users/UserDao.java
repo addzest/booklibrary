@@ -3,7 +3,7 @@ package com.laba.booklibrary.service.users;
 
 import com.laba.booklibrary.service.users.model.UserTO;
 
-interface UserDao {
+public interface UserDao {
 
 
     void addUser(UserTO userTO);
@@ -13,6 +13,8 @@ interface UserDao {
     boolean checkUsername(String username);
 
     long getUserId(String username);
+
+    UserTO getUserTOById(long id);
 
     String getUserRole(long id);
 }

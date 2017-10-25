@@ -1,6 +1,10 @@
 package com.laba.booklibrary.service.books;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
+import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
+import com.laba.booklibrary.service.users.UserDao;
+import com.laba.booklibrary.service.users.model.UserTO;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +28,9 @@ public class BookServiceImplTest {
 
     @Mock
     private BookDao bookDao;
+
+    @Mock
+    private UserDao userDao;
 
     @Before
     public void setUp() throws Exception {
@@ -43,7 +51,7 @@ public class BookServiceImplTest {
         Assert.assertEquals(expectedBookTO, actualBook);
     }
 
- /*   @Test
+    @Test
     public void removeBookOnHoldTrue() throws Exception {
         BookTO expectedBookTO = new BookTO();
         expectedBookTO.setId(1);
@@ -103,8 +111,8 @@ public class BookServiceImplTest {
         expectedBookTO2.setId(2);
         expectedBookTO1.setTitle("Book Title2");
         expectedBookList.add(expectedBookTO2);
-        when(bookDao.getBookTOList()).thenReturn(expectedBookList);
-        List<BookTO> bookTOS = bookService.getBookTOList();
+        when(bookDao.getBookTOList(5, 1, "title")).thenReturn(expectedBookList);
+        List<BookTO> bookTOS = bookService.getBookTOList(5, 1, "title");
         Assert.assertEquals(2, bookTOS.size());
     }
 
@@ -116,8 +124,8 @@ public class BookServiceImplTest {
         expectedBookTO1.setTitle("Book Title1");
         expectedBookList.add(expectedBookTO1);
         String searchRequest = "Title1";
-        when(bookDao.findBooks(searchRequest)).thenReturn(expectedBookList);
-        List<BookTO> bookTOS = bookService.findBooks(searchRequest);
+        when(bookDao.findBooks(searchRequest, 5, 1, "title")).thenReturn(expectedBookList);
+        List<BookTO> bookTOS = bookService.findBooks(searchRequest, 5, 1, "title");
         Assert.assertEquals(1, bookTOS.size());
     }
 
@@ -127,8 +135,6 @@ public class BookServiceImplTest {
         expectedBookTO.setId(1);
         expectedBookTO.setTitle("Book Title1");
         expectedBookTO.setCount(1);
-        expectedBookTO.setUserId(1);
-        expectedBookTO.setHoldType("subscription");
         when(bookDao.getBookById(1)).thenReturn(expectedBookTO);
         bookService.takeBook(1, 1, "subscription");
         verify(bookDao, times(1)).getBookById(1);
@@ -157,12 +163,18 @@ public class BookServiceImplTest {
         expectedBookTO.setId(1);
         expectedBookTO.setTitle("Book Title1");
         expectedBookTO.setCount(1);
-        expectedBookTO.setOperationId(1);
+        UserTO expectedUserTO = new UserTO();
+        expectedUserTO.setId(1);
+        expectedUserTO.setUsername("user1");
+        BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
+        bookOnHoldIdTO.setBookTO(expectedBookTO);
+        bookOnHoldIdTO.setUserTO(expectedUserTO);
         when(bookDao.getBookById(1)).thenReturn(expectedBookTO);
+        when(userDao.getUserTOById(1)).thenReturn(expectedUserTO);
         bookService.returnBook(1, 1);
         verify(bookDao, times(1)).getBookById(1);
         verify(bookDao, times(1)).updateBook(expectedBookTO);
-        verify(bookDao, times(1)).returnBook(1);
+        verify(bookDao, times(1)).returnBook(bookOnHoldIdTO);
         Assert.assertEquals(2, expectedBookTO.getCount());
     }
 
@@ -171,47 +183,74 @@ public class BookServiceImplTest {
         BookTO expectedBookTO = new BookTO();
         expectedBookTO.setId(1);
         expectedBookTO.setTitle("Book Title1");
-        expectedBookTO.setApproved(false);
-        expectedBookTO.setOperationId(1);
+        UserTO expectedUserTO = new UserTO();
+        expectedUserTO.setId(1);
+        expectedUserTO.setUsername("user1");
+        BookOnHoldTO expectedBookOnHoldTO = new BookOnHoldTO();
+        expectedBookOnHoldTO.setBookTO(expectedBookTO);
+        expectedBookOnHoldTO.setUserTO(expectedUserTO);
+        expectedBookOnHoldTO.setApproved(false);
         when(bookDao.getBookById(1)).thenReturn(expectedBookTO);
-        bookService.approveBook(1);
-        BookTO actualBookTO = bookDao.getBookById(1);
-        actualBookTO.setApproved(true);
-        Assert.assertEquals(true, expectedBookTO.isApproved());
+        when(userDao.getUserTOById(1)).thenReturn(expectedUserTO);
+        bookService.approveBook(1, 1);
+        expectedBookOnHoldTO.setApproved(true);
+        verify(bookDao, times(1)).getBookById(1);
+        verify(userDao, times(1)).getUserTOById(1);
+        verify(bookDao, times(1)).approveBook(expectedBookOnHoldTO.getPk());
+        Assert.assertEquals(true, expectedBookOnHoldTO.isApproved());
     }
 
     @Test
     public void getBooksOnHoldList() throws Exception {
-        List<BookTO> expectedBookList = new ArrayList<>();
+        List<BookOnHoldTO> expectedBookOnHoldTOs = new ArrayList<>();
         BookTO expectedBookTO1 = new BookTO();
         expectedBookTO1.setId(1);
         expectedBookTO1.setTitle("Book Title1");
-        expectedBookTO1.setUserId(1);
-        expectedBookList.add(expectedBookTO1);
+        UserTO expectedUserTO1 = new UserTO();
+        expectedUserTO1.setId(1);
+        expectedUserTO1.setUsername("user1");
+        BookOnHoldTO expectedBookOnHoldTO1 = new BookOnHoldTO();
+        expectedBookOnHoldTO1.setBookTO(expectedBookTO1);
+        expectedBookOnHoldTO1.setUserTO(expectedUserTO1);
+        expectedBookOnHoldTOs.add(expectedBookOnHoldTO1);
         BookTO expectedBookTO2 = new BookTO();
         expectedBookTO2.setId(2);
         expectedBookTO1.setTitle("Book Title2");
-        expectedBookTO2.setUserId(1);
-        expectedBookList.add(expectedBookTO2);
-        when(bookDao.getBooksOnHoldList(1)).thenReturn(expectedBookList);
-        List<BookTO> bookTOS = bookService.getBooksOnHoldList(1);
-        Assert.assertEquals(2, bookTOS.size());
+        BookOnHoldTO expectedBookOnHoldTO2 = new BookOnHoldTO();
+        expectedBookOnHoldTO2.setBookTO(expectedBookTO2);
+        expectedBookOnHoldTO2.setUserTO(expectedUserTO1);
+        expectedBookOnHoldTOs.add(expectedBookOnHoldTO2);
+        when(bookDao.getBooksOnHoldList(1)).thenReturn(expectedBookOnHoldTOs);
+        List<BookOnHoldTO> bookOnHoldTOs = bookService.getBooksOnHoldList(1);
+        Assert.assertEquals(2, bookOnHoldTOs.size());
     }
 
     @Test
     public void getAllBooksOnHoldList() throws Exception {
-        List<BookTO> expectedBookList = new ArrayList<>();
+        List<BookOnHoldTO> expectedBookOnHoldToList = new ArrayList<>();
         BookTO expectedBookTO1 = new BookTO();
         expectedBookTO1.setId(1);
         expectedBookTO1.setTitle("Book Title1");
-        expectedBookList.add(expectedBookTO1);
+        UserTO expectedUserTO1 = new UserTO();
+        expectedUserTO1.setId(1);
+        expectedUserTO1.setUsername("user1");
+        BookOnHoldTO expectedBookOnHoldTO1 = new BookOnHoldTO();
+        expectedBookOnHoldTO1.setBookTO(expectedBookTO1);
+        expectedBookOnHoldTO1.setUserTO(expectedUserTO1);
+        expectedBookOnHoldToList.add(expectedBookOnHoldTO1);
         BookTO expectedBookTO2 = new BookTO();
-        expectedBookTO2.setId(2);
+        expectedBookTO1.setId(2);
         expectedBookTO1.setTitle("Book Title2");
-        expectedBookList.add(expectedBookTO2);
-        when(bookDao.getAllBooksOnHoldList()).thenReturn(expectedBookList);
-        List<BookTO> bookTOS = bookService.getAllBooksOnHoldList();
-        Assert.assertEquals(2, bookTOS.size());
-    }*/
+        UserTO expectedUserTO2 = new UserTO();
+        expectedUserTO1.setId(2);
+        expectedUserTO1.setUsername("user2");
+        BookOnHoldTO expectedBookOnHoldTO2 = new BookOnHoldTO();
+        expectedBookOnHoldTO2.setBookTO(expectedBookTO2);
+        expectedBookOnHoldTO2.setUserTO(expectedUserTO2);
+        expectedBookOnHoldToList.add(expectedBookOnHoldTO2);
+        when(bookDao.getAllBooksOnHoldList()).thenReturn(expectedBookOnHoldToList);
+        List<BookOnHoldTO> bookOnHoldTOs = bookService.getAllBooksOnHoldList();
+        Assert.assertEquals(2, bookOnHoldTOs.size());
+    }
 
 }

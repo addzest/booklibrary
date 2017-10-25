@@ -12,18 +12,28 @@
     </div>
     <!-- /.navbar-header -->
     <ul class="nav navbar-top-links navbar-right">
-
-
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-language fa-fw"></i> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
                 <li>
-                    <a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if>language=ru<c:if test="${!empty id}">&id=${id}</c:if><c:if test="${!empty searchRequest}">&searchRequest=${searchRequest}</c:if><c:if test="${!empty currentPage}">&page=${currentPage}</c:if> "><i class="${language != 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>Русский</a>
+                    <a href="${requestScope['javax.servlet.forward.request_uri']}?
+<c:if test="${!empty action}">action=${action}&</c:if>
+language=ru&
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}</c:if>">
+                        <i class="${language != 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>Русский</a>
                 </li>
                 <li>
-                    <a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if>language=en<c:if test="${!empty id}">&id=${id}</c:if><c:if test="${!empty searchRequest}">&searchRequest=${searchRequest}</c:if><c:if test="${!empty currentPage}">&page=${currentPage}</c:if>"><i class="${language == 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>English</a>
+                    <a href="${requestScope['javax.servlet.forward.request_uri']}?
+<c:if test="${!empty action}">action=${action}&</c:if>
+language=en&
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}</c:if>">
+                        <i class="${language == 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>English</a>
                 </li>
             </ul>
         </li>

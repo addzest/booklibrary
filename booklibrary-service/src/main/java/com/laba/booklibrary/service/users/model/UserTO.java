@@ -14,7 +14,7 @@ import java.util.Set;
 @Table(name = "users")
 public class UserTO implements Serializable{
 
-    private Long id;
+    private long id;
     private String username;
     private String password;
     private String firstName;
@@ -57,11 +57,11 @@ public class UserTO implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

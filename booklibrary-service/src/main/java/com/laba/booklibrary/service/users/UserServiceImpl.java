@@ -60,6 +60,13 @@ public class UserServiceImpl implements UserService{
         return this.userDao.getUserRole(id);
     }
 
+
+    @Override
+    public UserTO getUserById(long id) {
+        return this.userDao.getUserTOById(id);
+    }
+
+
     /**
      * Method to get user id
      * @param username - user name

@@ -13,6 +13,8 @@ public interface UserService {
 
     String getUserRole(long id);
 
+    UserTO getUserById(long id);
+
     long getUserId(String username);
 
 

@@ -1,5 +1,6 @@
 package com.laba.booklibrary.service.books;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
 import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
 
@@ -31,7 +32,10 @@ interface BookDao {
     boolean bookOnHold (long id);
     void takeBook(long bookId, long userId, String holdType);
 
-    void returnBook(long bookId, long userId);
 
-    void approveBook(long bookId, long userId);
+    BookOnHoldTO getBookOnHoldTO(BookOnHoldIdTO bookOnHoldIdTO);
+
+    void returnBook(BookOnHoldIdTO bookOnHoldIdTO);
+
+    void approveBook(BookOnHoldIdTO bookOnHoldIdTO);
 }

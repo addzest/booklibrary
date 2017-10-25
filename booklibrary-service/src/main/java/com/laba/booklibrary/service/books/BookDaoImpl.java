@@ -86,9 +86,8 @@ class BookDaoImpl implements BookDao {
         Session session = getSession();
         session.beginTransaction();
         String searchRequestForQuery = "%" + searchRequest + "%";
-        Query query = session.createQuery("from BookTO b where lower(concat(b.title,' ',b.author,' ',b.publishYear,' ',b.count,' ',b.description)) like lower(:searchRequest) order by :orderBy", BookTO.class);
+        Query query = session.createNativeQuery("select * from books where lower(concat(title,' ',author,' ',publish_year,' ',count,' ',description)) like lower(:searchRequest) order by " + orderBy + " asc", BookTO.class);
         query.setParameter("searchRequest", searchRequestForQuery);
-        query.setParameter("orderBy", orderBy);
         query.setFirstResult((currentPage - 1) * recordsPerPage);
         query.setMaxResults(recordsPerPage);
         List<BookTO> foundBooks = query.getResultList();
@@ -157,18 +156,24 @@ class BookDaoImpl implements BookDao {
     }
 
 
-    /**
-     * Method removes book from books_onhold table
-     * @param bookId - book id
-     * @param userId - user id
-     */
     @Override
-    public void returnBook(long bookId, long userId) {
+    public BookOnHoldTO getBookOnHoldTO(BookOnHoldIdTO bookOnHoldIdTO) {
         Session session = getSession();
         session.beginTransaction();
-        BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
-        bookOnHoldIdTO.setUserTO(session.get(UserTO.class, userId));
-        bookOnHoldIdTO.setBookTO(session.get(BookTO.class, bookId));
+        BookOnHoldTO bookOnHoldTO = session.get(BookOnHoldTO.class, bookOnHoldIdTO);
+        closeSession();
+        return bookOnHoldTO;
+    }
+
+    /**
+     * Method removes book from books_onhold table
+     * @param bookOnHoldIdTO - book id
+
+     */
+    @Override
+    public void returnBook(BookOnHoldIdTO bookOnHoldIdTO) {
+        Session session = getSession();
+        session.beginTransaction();
         session.remove(session.get(BookOnHoldTO.class, bookOnHoldIdTO));
         session.getTransaction().commit();
         closeSession();
@@ -176,17 +181,14 @@ class BookDaoImpl implements BookDao {
 
     /**
      * Method sets approval of operation in books_onhold table by operation id
-     * @param bookId - book id
-     * @param userId - user id
+     * @param bookOnHoldIdTO - book id
+
      */
 
     @Override
-    public void approveBook(long bookId, long userId) {
+    public void approveBook(BookOnHoldIdTO bookOnHoldIdTO) {
         Session session = getSession();
         session.beginTransaction();
-        BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
-        bookOnHoldIdTO.setUserTO(session.get(UserTO.class, userId));
-        bookOnHoldIdTO.setBookTO(session.get(BookTO.class, bookId));
         BookOnHoldTO bookOnHoldTO = session.get(BookOnHoldTO.class, bookOnHoldIdTO);
         bookOnHoldTO.setApproved(APPROVED);
         session.update(bookOnHoldTO);

@@ -1,7 +1,10 @@
 package com.laba.booklibrary.service.books;
 
+import com.laba.booklibrary.service.books.model.BookOnHoldIdTO;
 import com.laba.booklibrary.service.books.model.BookOnHoldTO;
 import com.laba.booklibrary.service.books.model.BookTO;
+import com.laba.booklibrary.service.users.UserDao;
+import com.laba.booklibrary.service.users.UserDaoImpl;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -13,6 +16,7 @@ public class BookServiceImpl implements BookService {
 
     private static final Logger log = Logger.getLogger(BookServiceImpl.class);
     private BookDao bookDao = new BookDaoImpl();
+    private UserDao userDao = new UserDaoImpl();
 
     /**
      * Method for adding book
@@ -117,9 +121,12 @@ public class BookServiceImpl implements BookService {
     @Override
     public void returnBook(long bookId, long userId) {
         BookTO bookTO = bookDao.getBookById(bookId);
+        BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
+        bookOnHoldIdTO.setUserTO(userDao.getUserTOById(userId));
+        bookOnHoldIdTO.setBookTO(bookTO);
         bookTO.setCount(bookTO.getCount() + 1);
         bookDao.updateBook(bookTO);
-        bookDao.returnBook(bookId, userId);
+        bookDao.returnBook(bookOnHoldIdTO);
         log.info("Book " + bookTO + " returned");
     }
 
@@ -130,7 +137,10 @@ public class BookServiceImpl implements BookService {
      */
     @Override
     public void approveBook(long bookId, long userId) {
-        bookDao.approveBook(bookId, userId);
+        BookOnHoldIdTO bookOnHoldIdTO = new BookOnHoldIdTO();
+        bookOnHoldIdTO.setUserTO(userDao.getUserTOById(userId));
+        bookOnHoldIdTO.setBookTO(bookDao.getBookById(bookId));
+        bookDao.approveBook(bookOnHoldIdTO);
         log.info("Operation " + bookId + userId + " approved");
     }
 

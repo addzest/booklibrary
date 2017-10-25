@@ -13,7 +13,7 @@ import static com.laba.booklibrary.service.connection.HibernateUtil.getSession;
 /**
  * DAO access layer for users table
  */
-class UserDaoImpl implements UserDao {
+public class UserDaoImpl implements UserDao {
     private static final long DEFAULT_ROLE_ID = 2;// 2- reader
     private static final String USERNAME = "username";
 
@@ -92,6 +92,15 @@ class UserDaoImpl implements UserDao {
         long userId = userTO.getId();
         closeSession();
         return userId;
+    }
+
+    @Override
+    public UserTO getUserTOById(long id) {
+        Session session = getSession();
+        session.beginTransaction();
+        UserTO userTO = session.get(UserTO.class, id);
+        closeSession();
+        return userTO;
     }
 
     /**

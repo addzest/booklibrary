@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="utf-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
 <fmt:setLocale value="${language}" />
 <fmt:setBundle basename="locale" />
 <html>
@@ -32,19 +34,29 @@
                         <fieldset>
                             <input id ="id" type="hidden" name="id" value="${bookTO.id}">
                             <div class="form-group">
-                                <input class="form-control" id="title" placeholder="<fmt:message key="bookform.title"/>" name="title" type="text" value="${bookTO.title}" required>
+                                <input class="form-control" id="title" placeholder="<fmt:message key="bookform.title"/>"
+                                       name="title" type="text" value="${bookTO.title}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="author" placeholder="<fmt:message key="bookform.author"/>" name="author" type="text" value="${bookTO.author}" required>
+                                <input class="form-control" id="author"
+                                       placeholder="<fmt:message key="bookform.author"/>"
+                                       name="author" type="text" value="${bookTO.author}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="publishyear" placeholder="<fmt:message key="bookform.publishyear"/>" name="publishyear" type="number" min="1000" max="2099" step="1" value="${bookTO.publishYear}" required>
+                                <input class="form-control" id="publishyear"
+                                       placeholder="<fmt:message key="bookform.publishyear"/>"
+                                       name="publishyear" type="number" min="1000" max="2099" step="1"
+                                       value="${bookTO.publishYear}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>" name="count" type="number" min="0" max="100" step="1" value="${bookTO.count}" required>
+                                <input class="form-control" id="count" placeholder="<fmt:message key="bookform.count"/>"
+                                       name="count" type="number" min="0" max="100" step="1" value="${bookTO.count}"
+                                       required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" id="description" placeholder="<fmt:message key="bookform.description"/>" name="description" type="text" value="${bookTO.description}" required>
+                                <input class="form-control" id="description"
+                                       placeholder="<fmt:message key="bookform.description"/>"
+                                       name="description" type="text" value="${bookTO.description}" required>
                             </div>
                             <fmt:message key="bookform.button.submit" var="buttonValue"/>
                             <input type="submit" class="btn btn-lg btn-success btn-block" value="${buttonValue}"/>
