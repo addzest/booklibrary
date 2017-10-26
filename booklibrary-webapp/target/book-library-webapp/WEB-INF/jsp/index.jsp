@@ -41,7 +41,8 @@
             <div class="row">
                 <div class="col-lg-5">
                     <div class="form-group">
-                        <input class="form-control" id="searchRequest" type="text" name="searchRequest" placeholder="<fmt:message key="index.searchForm.request"/>"
+                        <input class="form-control" id="searchRequest" type="text" name="searchRequest"
+                               placeholder="<fmt:message key="index.searchForm.request"/>"
                                value="${searchRequest}" escapeXml="true"/>
                     </div>
                 </div>
@@ -57,16 +58,50 @@
             <c:if test="${!empty bookTOList}">
                 <table width="100%" class="table table-striped table-bordered table-hover dataTable">
                     <thead>
-                        <tr role="row">
-                            <th class="sorting"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>orderBy=title"><fmt:message key="index.bookList.title"/></a></th>
-                            <th class="sorting"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>orderBy=author"><fmt:message key="index.bookList.author"/></a></th>
-                            <th class="sorting"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>orderBy=publish_year"><fmt:message key="index.bookList.publishYear"/></a></th>
-                            <th class="sorting"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>orderBy=description"><fmt:message key="index.bookList.description"/></a></th>
-                            <th class="sorting"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>orderBy=count"><fmt:message key="index.bookList.count"/></a></th>
-                            <c:if test="${not empty sessionScope.hasRole}">
-                                <th class="sorting"><fmt:message key="index.bookList.actions"/></th>
-                            </c:if>
-                        </tr>
+                    <tr role="row">
+                        <th>
+                            <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+orderBy=title"><fmt:message key="index.bookList.title"/></a>
+                        </th>
+                        <th>
+                            <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+orderBy=author"><fmt:message key="index.bookList.author"/></a>
+                        </th>
+                        <th>
+                            <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+orderBy=publish_year"><fmt:message key="index.bookList.publishYear"/></a>
+                        </th>
+                        <th>
+                            <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+orderBy=description"><fmt:message key="index.bookList.description"/></a>
+                        </th>
+                        <th>
+                            <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+orderBy=count"><fmt:message key="index.bookList.count"/></a>
+                        </th>
+                        <c:if test="${not empty sessionScope.hasRole}">
+                            <th><fmt:message key="index.bookList.actions"/></th>
+                        </c:if>
+                    </tr>
                     </thead>
                     <c:forEach items="${bookTOList}" var="bookTO">
                         <tr>
@@ -75,43 +110,46 @@
                             <td><c:out value="${bookTO.publishYear}" escapeXml="true"/></td>
                             <td><c:out value="${bookTO.description}" escapeXml="true"/></td>
                             <td><c:out value="${bookTO.count}" escapeXml="true"/></td>
-                                <c:if test="${sessionScope.hasRole eq 'librarian'}">
-                            <td>
-                                    <a href="index?action=edit&id=<c:out value='${bookTO.id}' />"><fmt:message
-                                            key="index.bookList.edit"/></a>
-                                    <a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>action=delete&id=<c:out value='${bookTO.id}'/>"><fmt:message
-                                            key="index.bookList.delete"/></a>
-                            </td>
-                                </c:if>
-                                <c:if test="${sessionScope.hasRole eq 'reader'}">
-                                    <td>
-                                        <c:if test="${bookTO.count>0}">
-                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>&holdType=readingRoom&page=<c:out value='${currentPage}'/>"><fmt:message
-                                            key="index.bookList.readingRoom"/></a>
-                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>&holdType=subscription&page=<c:out value='${currentPage}'/>"><fmt:message
-                                            key="index.bookList.subscription"/></a>
-                                        </c:if>
-                                    </td>
-                                </c:if>
-
+                            <c:if test="${sessionScope.hasRole eq 'librarian'}">
+                                <td>
+                                    <a href="index?action=edit&id=<c:out value='${bookTO.id}' />">
+                                        <fmt:message key="index.bookList.edit"/></a>
+                                    <a href="index?
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+action=delete&id=<c:out value='${bookTO.id}'/>">
+<fmt:message key="index.bookList.delete"/></a>
+                                </td>
+                            </c:if>
+                            <c:if test="${sessionScope.hasRole eq 'reader'}">
+                                <td>
+                                    <c:if test="${bookTO.count>0}">
+                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
+                                    &holdType=readingRoom&page=<c:out value='${currentPage}'/>">
+                                        <fmt:message key="index.bookList.readingRoom"/></a>
+                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
+                                    &holdType=subscription&page=<c:out value='${currentPage}'/>">
+                                        <fmt:message key="index.bookList.subscription"/></a>
+                                    </c:if>
+                                </td>
+                            </c:if>
                         </tr>
                     </c:forEach>
                 </table>
-
                 <custom:listLength listLength="${requestScope.listLength}" currentPage="${requestScope.currentPage}"/>
-
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
                             <ul class="pagination">
-
                                 <c:if test="${currentPage != 1}">
                                     <li class="paginate_button previous" aria-controls="dataTables-example"
                                         tabindex="0"
-                                        id="dataTables-example_previous"><a
-                                            href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>page=${currentPage - 1}"><fmt:message
-                                            key="index.bookList.previous"/></a></li>
-
+                                        id="dataTables-example_previous">
+                                        <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+page=${currentPage - 1}"><fmt:message key="index.bookList.previous"/></a></li>
                                 </c:if>
                                 <c:forEach begin="1" end="${numberOfPages}" var="i">
                                     <c:choose>
@@ -120,16 +158,25 @@
                                         </c:when>
                                         <c:otherwise>
                                             <li class="paginate_button " aria-controls="dataTables-example"
-                                                tabindex="0"><a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>page=${i}">${i}</a></li>
+                                                tabindex="0">
+                                                <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>page=${i}">${i}</a>
+                                            </li>
                                         </c:otherwise>
                                     </c:choose>
                                 </c:forEach>
                                 </li>
                                 <c:if test="${currentPage lt numberOfPages}">
                                     <li class="paginate_button next" aria-controls="dataTables-example" tabindex="0"
-                                        id="dataTables-example_next"><a
-                                            href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty action}">action=${action}&</c:if><c:if test="${!empty id}">id=${id}&</c:if><c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>page=${currentPage + 1}"><fmt:message
-                                            key="index.bookList.next"/></a></li>
+                                        id="dataTables-example_next">
+                                        <a href="index?
+<c:if test="${!empty action}">action=${action}&</c:if>
+<c:if test="${!empty id}">id=${id}&</c:if>
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+page=${currentPage + 1}"><fmt:message key="index.bookList.next"/></a>
+                                    </li>
                                 </c:if>
                             </ul>
                         </div>
@@ -139,7 +186,8 @@
         </div>
         <c:if test="${sessionScope.hasRole eq 'librarian'}">
             </br>
-            <a href="index?action=addBook" class="btn btn-primary"><fmt:message key="index.bookList.addBook"/></a>
+            <a href="index?action=addBook" class="btn btn-primary">
+                <fmt:message key="index.bookList.addBook"/></a>
         </c:if>
         <div class="row">
         <c:if test="${not empty sessionScope.hasRole}">
@@ -183,13 +231,18 @@
                             </td>
                             <td>
                                 <c:if test="${sessionScope.hasRole eq 'reader'}">
-                                    <a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>action=returnBook&id=<c:out value='${bookOnHoldTO.bookTO.id}'/>&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>"><fmt:message
-                                            key="index.bookList.returnBook"/></a>
+                                    <a href="index?
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+action=returnBook&id=<c:out value='${bookOnHoldTO.bookTO.id}'/>
+&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>"><fmt:message key="index.bookList.returnBook"/></a>
                                 </c:if>
-
                                 <c:if test="${sessionScope.hasRole eq 'librarian' && not bookOnHoldTO.approved}">
-                                    <a href="${requestScope['javax.servlet.forward.request_uri']}?<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if><c:if test="${!empty currentPage}">page=${currentPage}&</c:if>action=approveBook&bookId=<c:out value='${bookOnHoldTO.bookTO.id}'/>&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>"><fmt:message
-                                            key="index.bookList.approve"/></a>
+                                    <a href="index?
+<c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
+<c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
+action=approveBook&bookId=<c:out value='${bookOnHoldTO.bookTO.id}'/>
+&userId=<c:out value='${bookOnHoldTO.userTO.id}'/>"><fmt:message key="index.bookList.approve"/></a>
                                 </c:if>
                             </td>
                         </tr>

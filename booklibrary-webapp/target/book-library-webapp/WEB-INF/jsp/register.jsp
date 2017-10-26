@@ -31,22 +31,27 @@
                     <form role="form" method="post" action="register">
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="register.label.username"/>" name="username" type="text" autofocus required>
+                                <input class="form-control" placeholder="<fmt:message key="register.label.username"/>"
+                                       name="username" type="text" autofocus required>
                                 <c:if test="${not empty userExistError}">
                                     <label><fmt:message key="register.label.existError"/></label>
                                 </c:if>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="register.label.password"/>" name="password" type="password" value="${userTO.password}" required>
+                                <input class="form-control" placeholder="<fmt:message key="register.label.password"/>"
+                                       name="password" type="password" value="${userTO.password}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="register.label.firstname"/>" name="firstname" type="text" value="${userTO.firstName}" required>
+                                <input class="form-control" placeholder="<fmt:message key="register.label.firstname"/>"
+                                       name="firstname" type="text" value="${userTO.firstName}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="register.label.lastnanme"/>" name="lastname" type="text" value="${userTO.lastName}" required>
+                                <input class="form-control" placeholder="<fmt:message key="register.label.lastnanme"/>"
+                                       name="lastname" type="text" value="${userTO.lastName}" required>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="<fmt:message key="register.label.email"/>" name="email" type="email" value="${userTO.email}" required>
+                                <input class="form-control" placeholder="<fmt:message key="register.label.email"/>"
+                                       name="email" type="email" value="${userTO.email}" required>
                             </div>
                             <fmt:message key="register.button.submit" var="buttonValue"/>
                             <input type="submit" class="btn btn-lg btn-success btn-block" value="${buttonValue}"/>
