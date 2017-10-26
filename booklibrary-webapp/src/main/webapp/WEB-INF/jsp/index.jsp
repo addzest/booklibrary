@@ -137,6 +137,7 @@ action=delete&id=<c:out value='${bookTO.id}'/>">
                     </c:forEach>
                 </table>
                 <custom:listLength listLength="${requestScope.listLength}" currentPage="${requestScope.currentPage}"/>
+                <c:if test="${requestScope.listLength}>5">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
@@ -182,6 +183,7 @@ page=${currentPage + 1}"><fmt:message key="index.bookList.next"/></a>
                         </div>
                     </div>
                 </div>
+                </c:if>
             </c:if>
         </div>
         <c:if test="${sessionScope.hasRole eq 'librarian'}">
