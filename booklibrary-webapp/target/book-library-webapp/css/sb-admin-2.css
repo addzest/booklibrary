@@ -187,10 +187,10 @@ table.dataTable thead .sorting_desc_disabled {
 }
 
 table.dataTable thead th a {
-  display:block;
-  width:100%;
+    display: block;
+    width: 100%;
     color: black;
-    text-decoration:none;
+    text-decoration: none;
 }
 table.dataTable thead .sorting_asc:after {
   content: "\f0de";

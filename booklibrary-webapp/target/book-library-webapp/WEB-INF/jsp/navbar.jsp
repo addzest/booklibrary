@@ -24,7 +24,7 @@ language=ru&
 <c:if test="${!empty id}">id=${id}&</c:if>
 <c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
 <c:if test="${!empty currentPage}">page=${currentPage}</c:if>">
-<i class="${language != 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>Русский</a>
+                        <i class="${language != 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>Русский</a>
                 </li>
                 <li>
                     <a href="${requestScope['javax.servlet.forward.request_uri']}?
@@ -33,7 +33,7 @@ language=en&
 <c:if test="${!empty id}">id=${id}&</c:if>
 <c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
 <c:if test="${!empty currentPage}">page=${currentPage}</c:if>">
-<i class="${language == 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>English</a>
+                        <i class="${language == 'en' ? 'fa fa-check-circle fa-fw' : ''}"></i>English</a>
                 </li>
             </ul>
         </li>

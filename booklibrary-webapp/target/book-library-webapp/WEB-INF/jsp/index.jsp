@@ -118,18 +118,18 @@ orderBy=count"><fmt:message key="index.bookList.count"/></a>
 <c:if test="${!empty searchRequest}">searchRequest=${searchRequest}&</c:if>
 <c:if test="${!empty currentPage}">page=${currentPage}&</c:if>
 action=delete&id=<c:out value='${bookTO.id}'/>">
-<fmt:message key="index.bookList.delete"/></a>
+                                        <fmt:message key="index.bookList.delete"/></a>
                                 </td>
                             </c:if>
                             <c:if test="${sessionScope.hasRole eq 'reader'}">
                                 <td>
                                     <c:if test="${bookTO.count>0}">
-                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
+                                        <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
                                     &holdType=readingRoom&page=<c:out value='${currentPage}'/>">
-                                        <fmt:message key="index.bookList.readingRoom"/></a>
-                                    <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
+                                            <fmt:message key="index.bookList.readingRoom"/></a>
+                                        <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
                                     &holdType=subscription&page=<c:out value='${currentPage}'/>">
-                                        <fmt:message key="index.bookList.subscription"/></a>
+                                            <fmt:message key="index.bookList.subscription"/></a>
                                     </c:if>
                                 </td>
                             </c:if>
@@ -137,6 +137,7 @@ action=delete&id=<c:out value='${bookTO.id}'/>">
                     </c:forEach>
                 </table>
                 <custom:listLength listLength="${requestScope.listLength}" currentPage="${requestScope.currentPage}"/>
+                <c:if test="${requestScope.listLength}>5">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
@@ -182,6 +183,7 @@ page=${currentPage + 1}"><fmt:message key="index.bookList.next"/></a>
                         </div>
                     </div>
                 </div>
+                </c:if>
             </c:if>
         </div>
         <c:if test="${sessionScope.hasRole eq 'librarian'}">

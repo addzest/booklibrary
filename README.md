@@ -1,29 +1,18 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
 
 * Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+need mysql, Intellij Idea (git, maven)
+1)copy project throw git on your Intellij Idea.
+2)Run ddl/init.sql on mysql db.
+3) Change credentials to your mysql db in hibernate.cfg.xml (booklibrary-service/src/main/resources/)
+4) maven clean, install
+5) configure tomcat server (start page: localhost:<port>/index, artifact: booklibrary-webapp.war)
+6) run tomcat
 
-### Contribution guidelines ###
+* Summary to use
+login as "librarian":
+username: admin
+password: admin
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+users register: all wih role "reader"
