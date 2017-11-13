@@ -15,4 +15,4 @@ login as "librarian":
 username: admin
 password: admin
 
-users register: all wih role "reader"
+users register: all with role "reader"

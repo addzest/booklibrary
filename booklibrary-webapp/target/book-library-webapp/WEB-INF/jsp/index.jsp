@@ -125,10 +125,10 @@ action=delete&id=<c:out value='${bookTO.id}'/>">
                                 <td>
                                     <c:if test="${bookTO.count>0}">
                                         <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
-                                    &holdType=readingRoom&page=<c:out value='${currentPage}'/>">
+&holdType=readingRoom&page=<c:out value='${currentPage}'/>">
                                             <fmt:message key="index.bookList.readingRoom"/></a>
                                         <a href="index?action=takeBook&id=<c:out value='${bookTO.id}'/>
-                                    &holdType=subscription&page=<c:out value='${currentPage}'/>">
+&holdType=subscription&page=<c:out value='${currentPage}'/>">
                                             <fmt:message key="index.bookList.subscription"/></a>
                                     </c:if>
                                 </td>
@@ -137,7 +137,7 @@ action=delete&id=<c:out value='${bookTO.id}'/>">
                     </c:forEach>
                 </table>
                 <custom:listLength listLength="${requestScope.listLength}" currentPage="${requestScope.currentPage}"/>
-                <c:if test="${requestScope.listLength}>5">
+                <c:if test="${requestScope.listLength>5}">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
