@@ -1,4 +1,4 @@
-DROP TABLE books;
+DROP TABLE IF EXISTS books;
 CREATE TABLE books
 (
 	id           BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -8,7 +8,7 @@ CREATE TABLE books
 	publish_year INT(11),
 	title        VARCHAR(255)
 );
-DROP TABLE books_onhold;
+DROP TABLE IF EXISTS books_onhold;
 CREATE TABLE books_onhold
 (
 	approved  TINYINT(4),
@@ -19,7 +19,7 @@ CREATE TABLE books_onhold
 );
 CREATE INDEX FKthh32fbe8d2vn0i9da7b8h9en
 	ON books_onhold (user_id);
-DROP TABLE user_role_mapping;
+DROP TABLE IF EXISTS user_role_mapping;
 CREATE TABLE user_role_mapping
 (
 	role_id BIGINT(20) NOT NULL,
@@ -28,13 +28,13 @@ CREATE TABLE user_role_mapping
 );
 CREATE INDEX FKl49eoylmyin6gvqydg53gps1e
 	ON user_role_mapping (role_id);
-DROP TABLE user_roles;
+DROP TABLE IF EXISTS user_roles;
 CREATE TABLE user_roles
 (
 	id        BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
 	role_name VARCHAR(255)
 );
-DROP TABLE users;
+DROP TABLE IF EXISTS users;
 CREATE TABLE users
 (
 	id            BIGINT(20) PRIMARY KEY NOT NULL AUTO_INCREMENT,
